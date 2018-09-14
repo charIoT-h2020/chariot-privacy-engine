@@ -22,7 +22,7 @@ client = mqtt.Client('privacy_engine')
 client.connect('127.0.0.1')
 
 client.loop_start()
-client.subscribe('house/light')
+client.subscribe('temperature')
 
 client.on_message = on_message
 client.on_log = on_log

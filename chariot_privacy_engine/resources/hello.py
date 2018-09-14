@@ -8,14 +8,14 @@ class HelloWorldResource(object):
     def __init__(self, mqtt):
         self.mqtt = mqtt
 
-    def on_get(self, req, resp):
-        self.mqtt.publish('house/light', 'ON')
+    def on_post(self, req, resp):
+        message_req = req.context['data']
+
+        if message_req:
+            self.mqtt.publish('temperature/%s' % message_req['id'], message_req['value'])
+
         doc = {
-            'images': [
-                {
-                    'href': '/images/1eaf6ef1-7f2d-4ecc-a8d5-6e8adba7cc0e.png'
-                }
-            ]
+            'status': 0
         }
         resp.status = falcon.HTTP_200
         resp.content_type = falcon.MEDIA_JSON
