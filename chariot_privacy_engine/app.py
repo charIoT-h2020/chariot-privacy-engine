@@ -14,6 +14,10 @@ def on_message(client, userdata, message):
     print("message retain flag=", message.retain)
 
 
+def on_log(client, userdata, level, buf):
+    print("log: ", buf)
+
+
 client = mqtt.Client('privacy_engine')
 client.connect('127.0.0.1')
 
@@ -21,6 +25,7 @@ client.loop_start()
 client.subscribe('house/light')
 
 client.on_message = on_message
+client.on_log = on_log
 
 app = falcon.API()
 
