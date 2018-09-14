@@ -11,7 +11,10 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = [
+    'falcon',
+    'ujson'
+]
 
 setup_requirements = [ ]
 
@@ -21,21 +24,16 @@ setup(
     author="George Theofilis",
     author_email='g.theofilis@clmsuk.com',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: ISC License (ISCL)',
-        'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
+        'License :: OSI Approved :: Eclipse Public License 1.0 (EPL-1.0)',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
     ],
     description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
     install_requires=requirements,
-    license="ISC license",
+    license="EPL-1.0",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords='chariot_privacy_engine',
