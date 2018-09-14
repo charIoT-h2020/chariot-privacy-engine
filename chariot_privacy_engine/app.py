@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import falcon
+import falcon_jsonify
 
 import paho.mqtt.client as mqtt
 
@@ -27,7 +28,9 @@ client.subscribe('temperature')
 client.on_message = on_message
 client.on_log = on_log
 
-app = falcon.API()
+app = falcon.API(middleware=[
+    falcon_jsonify.Middleware(help_messages=True),
+])
 
 things = HelloWorldResource(client)
 

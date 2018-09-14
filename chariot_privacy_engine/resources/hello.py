@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import json
-import falcon
-
 
 class HelloWorldResource(object):
     def __init__(self, mqtt):
         self.mqtt = mqtt
 
     def on_post(self, req, resp):
-        message_req = req.context['data']
+        id = req.get_json('id')
+        value = req.get_json('value')
 
-        if message_req:
-            self.mqtt.publish('temperature/%s' % message_req['id'], message_req['value'])
+        self.mqtt.publish('temperature/%s' % id, value)
 
-        doc = {
-            'status': 0
+        resp.json = {
+            'status': 0,
+            'msg': [id, value]
         }
-        resp.status = falcon.HTTP_200
-        resp.content_type = falcon.MEDIA_JSON
-        resp.body = json.dumps(doc, ensure_ascii=False)
