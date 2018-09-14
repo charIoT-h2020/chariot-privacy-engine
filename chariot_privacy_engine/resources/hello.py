@@ -5,7 +5,11 @@ import falcon
 
 
 class HelloWorldResource(object):
+    def __init__(self, mqtt):
+        self.mqtt = mqtt
+
     def on_get(self, req, resp):
+        self.mqtt.publish('house/light', 'ON')
         doc = {
             'images': [
                 {

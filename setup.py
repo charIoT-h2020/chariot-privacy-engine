@@ -13,7 +13,8 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'falcon',
-    'ujson'
+    'ujson',
+    'paho-mqtt'
 ]
 
 setup_requirements = [ ]
