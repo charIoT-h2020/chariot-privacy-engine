@@ -26,7 +26,7 @@ def test_list_images(client):
     }
 
     response = client.simulate_get('/things')
-    result_doc = response.content
+    result_doc = json.loads(response.content)
 
     assert result_doc == doc
     assert response.status == falcon.HTTP_OK
