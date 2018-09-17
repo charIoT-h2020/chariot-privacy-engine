@@ -13,7 +13,7 @@ client.connect('127.0.0.1')
 client.loop_start()
 
 engine = Engine(client)
-client.on_log = engine.on_log
+# client.on_log = engine.on_log
 
 engine.subscribe_to_southbound()
 client.on_message = engine.on_message
