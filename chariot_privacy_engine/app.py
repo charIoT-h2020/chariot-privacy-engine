@@ -5,33 +5,23 @@ import falcon_jsonify
 
 import paho.mqtt.client as mqtt
 
-from .resources import HelloWorldResource
-
-
-def on_message(client, userdata, message):
-    print("message received ", str(message.payload.decode("utf-8")))
-    print("message topic=", message.topic)
-    print("message qos=", message.qos)
-    print("message retain flag=", message.retain)
-
-
-def on_log(client, userdata, level, buf):
-    print("log: ", buf)
-
+from .resources import MessageResource
+from .engine import Engine
 
 client = mqtt.Client('privacy_engine')
 client.connect('127.0.0.1')
-
 client.loop_start()
-client.subscribe('temperature/#')
 
-client.on_message = on_message
-client.on_log = on_log
+engine = Engine(client)
+client.on_log = engine.on_log
+
+engine.subscribe_to_southbound()
+client.on_message = engine.on_message
 
 app = falcon.API(middleware=[
     falcon_jsonify.Middleware(help_messages=True),
 ])
 
-things = HelloWorldResource(client)
+message = MessageResource(engine)
 
-app.add_route('/things', things)
+app.add_route('/message', message)
