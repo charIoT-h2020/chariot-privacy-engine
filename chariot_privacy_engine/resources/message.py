@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ..engine.message import Message
 
 
 class MessageResource(object):
@@ -9,7 +10,4 @@ class MessageResource(object):
         sensor_id = req.get_json('id')
         value = req.get_json('value')
 
-        resp.json = self.engine.apply({
-            id: sensor_id,
-            value: value
-        })
+        resp.json = self.engine.apply(Message(sensor_id, value))
