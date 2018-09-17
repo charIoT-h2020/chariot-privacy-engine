@@ -8,7 +8,7 @@ class MessageResource(object):
     def on_post(self, req, resp):
         sensor_id = req.get_json('id')
         value = req.get_json('value')
-
+        print("log: ", sensor_id, value)
         self.engine.publish('temperature/%s' % sensor_id, value)
 
         resp.json = {
