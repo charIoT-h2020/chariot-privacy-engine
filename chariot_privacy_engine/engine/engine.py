@@ -5,8 +5,10 @@ class Engine(object):
     def subscribe_to_southbound(self):
         self.client.subscribe('temperature/#')
 
-    def publish(self, topic, value):
-        self.client.publish(topic, value)
+    def apply(self, message):
+        self.client.publish('temperature/%s' % message.id, message.value)
+
+        return 0
 
     @staticmethod
     def on_message(client, userdata, message):
