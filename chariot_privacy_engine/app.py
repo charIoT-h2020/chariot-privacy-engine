@@ -8,15 +8,23 @@ import paho.mqtt.client as mqtt
 from .resources import MessageResource
 from .engine import Engine
 
-client = mqtt.Client('privacy_engine')
-client.connect('127.0.0.1')
-client.loop_start()
+# Initialize connection to southbound
+southbound = mqtt.Client('southbound')
+southbound.connect('172.18.1.2')
+southbound.loop_start()
 
-engine = Engine(client)
-# client.on_log = engine.on_log
+# Initialize connection to northbound
+northbound = mqtt.Client('northbound')
+northbound.connect('172.18.1.3')
+northbound.loop_start()
 
-engine.subscribe_to_southbound()
-client.on_message = engine.on_message
+engine = Engine(southbound, northbound)
+
+northbound.on_log = engine.on_log
+northbound.on_message = engine.on_message
+
+southbound.on_log = engine.on_log
+southbound.on_message = engine.on_message
 
 app = falcon.API(middleware=[
     falcon_jsonify.Middleware(help_messages=True),
