@@ -4,9 +4,11 @@ from Crypto import Random
 from Crypto.PublicKey import RSA
 import paho.mqtt.client as mqtt
 
-
 mqtt.Client.connected_flag = False
-key = ''
+
+with open('private_key.pem', 'r') as f:
+    key = RSA.importKey(f.read())
+
 
 def decrypt_message(encoded_encrypted_msg, private_key):
     decoded_encrypted_msg = base64.b64decode(encoded_encrypted_msg)
@@ -15,7 +17,9 @@ def decrypt_message(encoded_encrypted_msg, private_key):
 
 
 def on_message(client, userdata, message):
-    print("message received  ", str(message.payload.decode("utf-8")), "topic", message.topic, "retained ", message.retain)
+    decrypted_message = decrypt_message(message.payload.decode("utf-8"), key)
+
+    print("(%s) message received(%s): %s  " % (message.topic, message.retain, decrypted_message))
     if message.retain == 1:
         print("This is a retained message")
 
