@@ -9,5 +9,6 @@ class MessageResource(object):
     def on_post(self, req, resp):
         sensor_id = req.get_json('id')
         value = req.get_json('value')
+        destination = req.get_json('destination')
 
-        resp.json = self.engine.apply(Message(sensor_id, value))
+        resp.json = self.engine.apply(Message(sensor_id, value, destination))
