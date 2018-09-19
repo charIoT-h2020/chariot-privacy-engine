@@ -2,12 +2,15 @@
 from Crypto.PublicKey import RSA
 import base64
 
+from ..inspector import Alert, Severity
+
 
 class RsaRuleFilter(object):
 
-    def __init__(self):
+    def __init__(self, engine):
+        self.engine = engine
         self.rules = {
-            'bmc': {
+            'bms': {
                 'permissions': {
                     'urn:ngsi-ld:temp:001': 2
                 },
@@ -25,13 +28,12 @@ class RsaRuleFilter(object):
             if self.has_read_right(rule.get('permissions').get(message.id, 0)):
                 public_key = RSA.importKey(rule.get('key'))
                 encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
-                encoded_encrypted_msg = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
-                print(encoded_encrypted_msg)
-                return encoded_encrypted_msg
+                message.value = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
+                self.engine.publish(message)
             else:
-                return None
+                self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, Severity.critical))
         else:
-            return None
+            self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, Severity.critical))
 
     @staticmethod
     def has_read_right(flag):

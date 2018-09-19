@@ -31,13 +31,12 @@ private_key, public_key = generate_keys()
 encrypted_msg = encrypt_message(a_message, public_key)
 decrypted_msg = decrypt_message(encrypted_msg, private_key)
 
-f = open('client/private_key.pem', 'wb')
-f.write(private_key.exportKey('PEM'))
-f.close()
+with open('client/private_key.pem', 'wb') as f:
+    f.write(private_key.exportKey('PEM'))
+    f.close()
 
-f = open('client/public_key.pem', 'wb')
-f.write(public_key.exportKey('PEM'))
-f.close()
+with open('client/public_key.pem', 'wb') as f:
+    f.write(public_key.exportKey('PEM'))
 
 print("%s - (%d)" % (private_key.exportKey('PEM'), len(private_key.exportKey())))
 print("%s - (%d)" % (public_key.exportKey('PEM'), len(public_key.exportKey())))

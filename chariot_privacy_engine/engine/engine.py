@@ -14,18 +14,17 @@ class Engine(object):
         ]
 
         self.filters = [
-            RsaRuleFilter()
+            RsaRuleFilter(self)
         ]
 
         self.subscribe_to_southbound()
         self.subscribe_to_northbound()
 
     def subscribe_to_southbound(self):
-        self.southbound.subscribe('dashboard/alerts')
+        pass
 
     def subscribe_to_northbound(self):
-        self.northbound.subscribe('dashboard/alerts')
-        self.northbound.subscribe('bms/urn:ngsi-ld:temp:001')
+        pass
 
     def apply(self, message):
         self.filter(message)
@@ -39,7 +38,10 @@ class Engine(object):
 
     def filter(self, message):
         for _filter in self.filters:
-            self.northbound.publish('%s/%s' % (message.destination, message.id), _filter.do(message))
+            _filter.do(message)
+
+    def publish(self, message):
+        self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
 
     def raise_alert(self, alert):
         self.northbound.publish('dashboard/alerts', '%s,%s' % (alert.msg, alert.severity))
