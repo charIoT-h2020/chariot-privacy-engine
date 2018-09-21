@@ -3,20 +3,16 @@
 import falcon
 import falcon_jsonify
 
-import paho.mqtt.client as mqtt
-
 from .resources import MessageResource
-from .engine import Engine
+from .engine import Engine, Client
 
 # Initialize connection to southbound
-southbound = mqtt.Client('southbound')
-southbound.connect('172.18.1.2')
-southbound.loop_start()
+southbound = Client('southbound', '172.18.1.2')
+southbound.start(False)
 
 # Initialize connection to northbound
-northbound = mqtt.Client('northbound')
-northbound.connect('172.18.1.3')
-northbound.loop_start()
+northbound = Client('northbound', '172.18.1.3')
+northbound.start(False)
 
 engine = Engine(southbound, northbound)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .alert import Alert, Severity
+from .alert import Alert
 
 
 class CognitiveInspector(object):
@@ -9,4 +9,4 @@ class CognitiveInspector(object):
     def check(self, message):
         if message.value == 'AB00110':
             msg = 'Sensor %s returns sensitive information' % message.id
-            self.engine.raise_alert(Alert(msg, Severity.critical))
+            self.engine.raise_alert(Alert(msg, 100))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from ..inspector import CognitiveInspector, TopologyInspector
 from ..filter import RsaRuleFilter
+from ..inspector import CognitiveInspector, TopologyInspector
 
 
 class Engine(object):

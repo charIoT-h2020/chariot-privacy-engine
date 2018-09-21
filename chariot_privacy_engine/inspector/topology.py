@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .alert import Alert, Severity
+from .alert import Alert
 
 
 class TopologyInspector(object):
@@ -17,4 +17,4 @@ class TopologyInspector(object):
     def check(self, message):
         if self.topology[message.id]['sensitive']:
             msg = 'Sensor %s returns sensitive information' % message.id
-            self.engine.raise_alert(Alert(msg, Severity.warning))
+            self.engine.raise_alert(Alert(msg, 50))
