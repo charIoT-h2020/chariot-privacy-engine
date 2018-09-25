@@ -2,7 +2,7 @@
 from Crypto.PublicKey import RSA
 import base64
 
-from ..inspector import Alert, Severity
+from ..inspector import Alert
 
 
 class RsaRuleFilter(object):
@@ -31,9 +31,9 @@ class RsaRuleFilter(object):
                 message.value = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
                 self.engine.publish(message)
             else:
-                self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, Severity.critical))
+                self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, 100))
         else:
-            self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, Severity.critical))
+            self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, 100))
 
     @staticmethod
     def has_read_right(flag):

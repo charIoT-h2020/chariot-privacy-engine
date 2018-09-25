@@ -21,7 +21,9 @@ class Engine(object):
         self.subscribe_to_northbound()
 
     def subscribe_to_southbound(self):
-        pass
+        self.southbound.subscribe([
+            ('engine/privacy', 0)
+        ])
 
     def subscribe_to_northbound(self):
         pass
@@ -44,7 +46,7 @@ class Engine(object):
         self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
 
     def raise_alert(self, alert):
-        self.northbound.publish('dashboard/alerts', '%s,%s' % (alert.msg, alert.severity))
+        self.northbound.publish('dashboard/alerts', str(alert))
 
     @staticmethod
     def on_message(client, userdata, message):
