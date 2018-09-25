@@ -5,7 +5,7 @@ services:
     restart: always
     image: eclipse-mosquitto
     hostname: southbound.mosquitto
-    container_name: southbound.mosquitto
+    container_name: chariot.southbound.broker
 #    expose:
 #      - "1883"
 #      - "9001"
@@ -24,7 +24,7 @@ services:
     restart: always
     image: eclipse-mosquitto
     hostname: northbound.mosquitto
-    container_name: northbound.mosquitto
+    container_name: chariot.northbound.broker
 #    expose:
 #      - "1883"
 #      - "9001"
