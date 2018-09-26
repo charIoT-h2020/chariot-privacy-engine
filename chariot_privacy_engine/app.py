@@ -3,8 +3,8 @@
 import falcon
 import falcon_jsonify
 
-from .resources import MessageResource
-from .engine import Engine, Client
+from chariot_privacy_engine.resources import MessageResource
+from chariot_privacy_engine.engine import Engine, Client
 
 # Initialize connection to southbound
 southbound = Client('southbound', '172.18.1.2')

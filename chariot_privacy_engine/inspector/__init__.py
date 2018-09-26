@@ -1,3 +1,3 @@
-from .alert import Alert, Severity
+from .alert import Alert
 from .topology import TopologyInspector
 from .cognitive import CognitiveInspector

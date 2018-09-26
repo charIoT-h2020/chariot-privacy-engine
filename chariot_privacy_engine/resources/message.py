@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..engine.message import Message
+from chariot_privacy_engine.engine import Message
 
 
 class MessageResource(object):

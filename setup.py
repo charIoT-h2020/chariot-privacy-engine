@@ -41,7 +41,7 @@ setup(
     include_package_data=True,
     keywords='chariot_privacy_engine',
     name='chariot_privacy_engine',
-    packages=find_packages(include=['chariot_privacy_engine']),
+    packages=find_packages(include=['chariot_privacy_engine', 'chariot_privacy_engine.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
