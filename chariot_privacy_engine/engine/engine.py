@@ -46,7 +46,7 @@ class Engine(object):
         self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
 
     def raise_alert(self, alert):
-        self.northbound.publish('dashboard/alerts', str(alert))
+        self.northbound.publish('alerts', str(alert))
 
     @staticmethod
     def on_message(client, userdata, message):
