@@ -14,4 +14,9 @@ class Alert(object):
         return json.dumps(self)
 
     def __unicode__(self):
-        return json.dumps(self)
+        msg = {
+            'msg': self.msg,
+            'severity': self.severity
+        }
+
+        return json.dumps(msg)
