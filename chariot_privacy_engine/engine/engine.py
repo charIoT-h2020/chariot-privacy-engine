@@ -22,7 +22,7 @@ class Engine(object):
 
     def subscribe_to_southbound(self):
         self.southbound.subscribe([
-            ('engine/privacy', 0)
+            ('dispatcher/privacy', 0)
         ])
 
     def subscribe_to_northbound(self):
