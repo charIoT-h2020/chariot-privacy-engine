@@ -43,9 +43,7 @@ class Engine(object):
             _filter.do(message)
 
     def publish(self, message):
-        pass
-        # self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
+        self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
 
     def raise_alert(self, alert):
-        pass
-        # self.northbound.publish('alerts', str(alert))
+        self.northbound.publish('alerts', str(alert))

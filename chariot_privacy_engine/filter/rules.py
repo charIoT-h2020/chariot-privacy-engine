@@ -9,31 +9,29 @@ class RsaRuleFilter(object):
 
     def __init__(self, engine):
         self.engine = engine
-        self.rules = {
-            'bms': {
-                'permissions': {
-                    'urn:ngsi-ld:temp:001': 2
-                },
+        self.actors = {
+            'urn:ngsi-ld:bms': {
                 'key': b'-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV'
                        b'\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd'
                        b'/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n'
                        b'-----END PUBLIC KEY----- '
             }
         }
+        self.rules = {
+            'urn:ngsi-ld:temp:001': [
+                ('urn:ngsi-ld:bms', 2),
+            ]
+        }
 
     def do(self, message):
-        rule = self.rules.get(message.destination)
+        rules = self.rules.get(message.sensor_id)
 
-        if rule is not None:
-            if self.has_read_right(rule.get('permissions').get(message.id, 0)):
-                public_key = RSA.importKey(rule.get('key'))
+        if rules is not None:
+            for rule in rules:
+                public_key = RSA.importKey(self.actors[rule[0]])
                 encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
                 message.value = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
                 self.engine.publish(message)
-            else:
-                self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, 100))
-        else:
-            self.engine.raise_alert(Alert('Permission denied to %s' % message.destination, 100))
 
     @staticmethod
     def has_read_right(flag):
