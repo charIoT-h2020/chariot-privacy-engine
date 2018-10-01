@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..model import Message
+from chariot_base.model import Message
 
 
 class MessageResource(object):

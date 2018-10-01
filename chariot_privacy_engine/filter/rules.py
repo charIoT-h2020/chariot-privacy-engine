@@ -2,7 +2,7 @@
 from Crypto.PublicKey import RSA
 import base64
 
-from ..model import Alert
+from chariot_base.model import Alert
 
 
 class RsaRuleFilter(object):
@@ -28,7 +28,7 @@ class RsaRuleFilter(object):
 
         if rules is not None:
             for rule in rules:
-                public_key = RSA.importKey(self.actors[rule[0]])
+                public_key = RSA.importKey(self.actors[rule[0]]['key'])
                 encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
                 message.value = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
                 self.engine.publish(message)
