@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import uuid
 import falcon
 import falcon_jsonify
 
@@ -7,26 +7,28 @@ from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
 from chariot_base.connector.local import LocalConnector
 
-# Initialize connection to southbound
-southbound = LocalConnector('southbound', '172.18.1.2')
-southbound.start(False)
 
-# Initialize connection to northbound
-northbound = LocalConnector('northbound', '172.18.1.3')
-northbound.start(False)
+def main():
+    # Initialize connection to southbound
+    southbound = LocalConnector('southbound_%s' % uuid.uuid4(), '172.18.1.2')
+    southbound.start(True)
 
-engine = Engine(southbound, northbound)
+    # Initialize connection to northbound
+    northbound = LocalConnector('northbound_%s' % uuid.uuid4(), '172.18.1.3')
+    northbound.start(True)
 
-northbound.on_log = engine.on_log
-northbound.on_message = engine.on_message
+    engine = Engine(southbound, northbound)
 
-southbound.on_log = engine.on_log
-southbound.on_message = engine.on_message
+    northbound.on_log = engine.on_log
+    northbound.on_message = engine.on_message
 
-app = falcon.API(middleware=[
-    falcon_jsonify.Middleware(help_messages=True),
-])
+    southbound.on_log = engine.on_log
+    southbound.on_message = engine.on_message
 
-message = MessageResource(engine)
+    app = falcon.API(middleware=[
+        falcon_jsonify.Middleware(help_messages=True),
+    ])
 
-app.add_route('/message', message)
+    message = MessageResource(engine)
+
+    app.add_route('/message', message)
