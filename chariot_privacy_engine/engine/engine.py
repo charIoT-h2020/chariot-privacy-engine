@@ -43,7 +43,7 @@ class Engine(object):
             _filter.do(message)
 
     def publish(self, message):
-        self.northbound.publish('%s/%s' % (message.destination, message.id), message.value)
+        self.northbound.publish('%s/%s' % (message.destination, message.sensor_id), message.value)
 
     def raise_alert(self, alert):
         self.northbound.publish('alerts', str(alert))
