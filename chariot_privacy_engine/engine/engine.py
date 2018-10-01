@@ -49,14 +49,3 @@ class Engine(object):
     def raise_alert(self, alert):
         pass
         # self.northbound.publish('alerts', str(alert))
-
-    @staticmethod
-    def on_message(client, userdata, message):
-        print("message received ", str(message.payload.decode("utf-8")))
-        print("message topic=", message.topic)
-        print("message qos=", message.qos)
-        print("message retain flag=", message.retain)
-
-    @staticmethod
-    def on_log(client, userdata, level, buf):
-        print("log: ", buf)

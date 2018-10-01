@@ -8,27 +8,42 @@ from chariot_privacy_engine.engine import Engine
 from chariot_base.connector.local import LocalConnector
 
 
-def main():
-    # Initialize connection to southbound
-    southbound = LocalConnector('southbound_%s' % uuid.uuid4(), '172.18.1.2')
-    southbound.start(True)
+class SouthboundConnector(LocalConnector):
+    def on_message(self, client, userdata, message):
+        print("message received ", str(message.payload.decode("utf-8")))
+        print("message topic=", message.topic)
+        print("message qos=", message.qos)
+        print("message retain flag=", message.retain)
 
-    # Initialize connection to northbound
-    northbound = LocalConnector('northbound_%s' % uuid.uuid4(), '172.18.1.3')
-    northbound.start(True)
+    def on_log(self, client, userdata, level, buf):
+        print("log: ", buf)
 
-    engine = Engine(southbound, northbound)
 
-    northbound.on_log = engine.on_log
-    northbound.on_message = engine.on_message
+class NorthboundConnector(LocalConnector):
+    def on_message(self, client, userdata, message):
+        print("message received ", str(message.payload.decode("utf-8")))
+        print("message topic=", message.topic)
+        print("message qos=", message.qos)
+        print("message retain flag=", message.retain)
 
-    southbound.on_log = engine.on_log
-    southbound.on_message = engine.on_message
+    def on_log(self, client, userdata, level, buf):
+        print("log: ", buf)
 
-    app = falcon.API(middleware=[
-        falcon_jsonify.Middleware(help_messages=True),
-    ])
 
-    message = MessageResource(engine)
+# Initialize connection to southbound
+southbound = SouthboundConnector('southbound_%s' % uuid.uuid4(), '172.18.1.2')
+southbound.start(False)
 
-    app.add_route('/message', message)
+# Initialize connection to northbound
+northbound = NorthboundConnector('northbound_%s' % uuid.uuid4(), '172.18.1.3')
+northbound.start(False)
+
+engine = Engine(southbound, northbound)
+
+app = falcon.API(middleware=[
+    falcon_jsonify.Middleware(help_messages=True),
+])
+
+message = MessageResource(engine)
+
+app.add_route('/message', message)
