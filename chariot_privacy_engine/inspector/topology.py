@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from chariot_privacy_engine.chariot_privacy_engine.model.alert import Alert
+from ..model import Alert
 
 
 class TopologyInspector(object):

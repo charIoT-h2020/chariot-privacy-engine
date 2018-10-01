@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from chariot_privacy_engine.engine import Message
+from ..model import Message
 
 
 class MessageResource(object):
@@ -7,8 +7,7 @@ class MessageResource(object):
         self.engine = engine
 
     def on_post(self, req, resp):
-        sensor_id = req.get_json('id')
+        sensor_id = req.get_json('sensor_id')
         value = req.get_json('value')
-        destination = req.get_json('destination')
 
-        resp.json = self.engine.apply(Message(sensor_id, value, destination))
+        resp.json = self.engine.apply(Message(sensor_id, value))
