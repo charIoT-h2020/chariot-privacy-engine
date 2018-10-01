@@ -5,10 +5,10 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 requirements = [
@@ -16,7 +16,8 @@ requirements = [
     'falcon-jsonify',
     'pycrypto',
     'ujson',
-    'paho-mqtt'
+    'paho-mqtt',
+    'chariot_base'
 ]
 
 setup_requirements = [ ]
