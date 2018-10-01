@@ -4,14 +4,15 @@ import falcon
 import falcon_jsonify
 
 from chariot_privacy_engine.resources import MessageResource
-from chariot_privacy_engine.engine import Engine, Client
+from chariot_privacy_engine.engine import Engine
+from chariot_base.connector.local import LocalConnector
 
 # Initialize connection to southbound
-southbound = Client('southbound', '172.18.1.2')
+southbound = LocalConnector('southbound', '172.18.1.2')
 southbound.start(False)
 
 # Initialize connection to northbound
-northbound = Client('northbound', '172.18.1.3')
+northbound = LocalConnector('northbound', '172.18.1.3')
 northbound.start(False)
 
 engine = Engine(southbound, northbound)

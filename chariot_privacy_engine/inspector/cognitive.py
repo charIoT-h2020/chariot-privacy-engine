@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .alert import Alert
+from chariot_privacy_engine.chariot_privacy_engine.model.alert import Alert
 
 
 class CognitiveInspector(object):

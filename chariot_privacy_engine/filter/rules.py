@@ -2,7 +2,7 @@
 from Crypto.PublicKey import RSA
 import base64
 
-from ..inspector import Alert
+from ..model import Alert
 
 
 class RsaRuleFilter(object):
