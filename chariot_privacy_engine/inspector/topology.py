@@ -15,6 +15,6 @@ class TopologyInspector(object):
         }
 
     def check(self, message):
-        if self.topology[message.id]['sensitive']:
-            msg = 'Sensor %s returns sensitive information' % message.id
+        if self.topology[message.sensor_id]['sensitive']:
+            msg = 'Sensor %s returns sensitive information' % message.sensor_id
             self.engine.raise_alert(Alert(msg, 50))
