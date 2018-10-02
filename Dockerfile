@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
-RUN python setup.py install
+RUN apk add gcc g++ make libffi-dev openssl-dev && python setup.py install
 RUN pip install falcon-jsonify
 EXPOSE 8010
 
