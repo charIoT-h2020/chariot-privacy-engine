@@ -1,14 +1,19 @@
 # Chariot Privacy Engine
 
-Python Boilerplate contains all the boilerplate you need to create a Python package.
+Chariot Privacy engine
 
 * Free software: ISC license
-* Documentation: https://chariot-privacy-engine.readthedocs.io.
 
+### Build docker images
+
+```
+docker build --tag chariot_privacy_engine .
+```
 
 ## Features
 
-* TODO
+* Inspect message
+* Apply encryption for packages
 
 ## Credits
 
