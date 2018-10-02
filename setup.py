@@ -16,6 +16,7 @@ requirements = [
     'pycrypto',
     'ujson',
     'paho-mqtt',
+    'gunicorn',
     'chariot_base'
 ]
 
