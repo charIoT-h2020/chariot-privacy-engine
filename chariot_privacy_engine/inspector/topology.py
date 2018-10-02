@@ -6,10 +6,10 @@ class TopologyInspector(object):
     def __init__(self, engine):
         self.engine = engine
         self.topology = {
-            'urn:ngsi-ld:temp:001': {
+            'temp:001': {
                 'sensitive': False
             },
-            'urn:ngsi-ld:card:001': {
+            'card:001': {
                 'sensitive': True
             }
         }

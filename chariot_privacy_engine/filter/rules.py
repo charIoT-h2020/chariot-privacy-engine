@@ -10,7 +10,7 @@ class RsaRuleFilter(object):
     def __init__(self, engine):
         self.engine = engine
         self.actors = {
-            'urn:ngsi-ld:bms': {
+            'bms': {
                 'key': b'-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV'
                        b'\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd'
                        b'/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n'
@@ -18,8 +18,11 @@ class RsaRuleFilter(object):
             }
         }
         self.rules = {
-            'urn:ngsi-ld:temp:001': [
-                ('urn:ngsi-ld:bms', 2),
+            'temp:001': [
+                ('bms', 2)
+            ],
+            '5410ec4d1601_humidity': [
+                ('bms', 2)
             ]
         }
 
