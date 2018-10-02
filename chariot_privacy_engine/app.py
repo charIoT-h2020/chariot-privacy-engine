@@ -33,6 +33,9 @@ engine = Engine()
 southbound = SouthboundConnector('southbound_%s' % uuid.uuid4(), '172.18.1.2', engine)
 northbound = NorthboundConnector('northbound_%s' % uuid.uuid4(), '172.18.1.3')
 
+engine.inject(southbound, northbound)
+engine.start()
+
 app = falcon.API(middleware=[
     falcon_jsonify.Middleware(help_messages=True),
 ])

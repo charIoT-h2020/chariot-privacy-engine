@@ -30,7 +30,7 @@ class RsaRuleFilter(object):
             for rule in rules:
                 public_key = RSA.importKey(self.actors[rule[0]]['key'])
                 encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
-                message.value = base64.b64encode(encrypted_msg)  # base64 encoded strings are database friendly
+                message.value = base64.b64encode(encrypted_msg).decode('utf-8')
                 message.destination = rule[0]
                 self.engine.publish(message)
 
