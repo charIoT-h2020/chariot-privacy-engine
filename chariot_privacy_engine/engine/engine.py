@@ -4,9 +4,9 @@ from ..inspector import CognitiveInspector, TopologyInspector
 
 
 class Engine(object):
-    def __init__(self, southbound, northbound):
-        self.southbound = southbound
-        self.northbound = northbound
+    def __init__(self):
+        self.southbound = None
+        self.northbound = None
 
         self.inspectors = [
             CognitiveInspector(self),
@@ -16,6 +16,14 @@ class Engine(object):
         self.filters = [
             RsaRuleFilter(self)
         ]
+
+    def inject(self, southbound, northbound):
+        self.southbound = southbound
+        self.northbound = northbound
+
+    def start(self):
+        self.southbound.start(False)
+        self.northbound.start(False)
 
         self.subscribe_to_southbound()
         self.subscribe_to_northbound()
@@ -34,16 +42,15 @@ class Engine(object):
         return 0
 
     def inspect(self, message):
-        for inspector in self.inspectors:
-            print('Run inspection: %s' % inspector.__class__.__name__)
-            inspector.check(message)
+        for _inspector in self.inspectors:
+            _inspector.check(message)
 
     def filter(self, message):
         for _filter in self.filters:
             _filter.do(message)
 
     def publish(self, message):
-        self.northbound.publish('%s/%s' % (message.destination, message.sensor_id), message.value)
+        self.southbound.publish('northbound', str(message))
 
     def raise_alert(self, alert):
         self.northbound.publish('alerts', str(alert))
