@@ -6,7 +6,8 @@ import falcon_jsonify
 
 from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
-from chariot_base.connector.local import LocalConnector
+from chariot_base.model import Message
+from chariot_base.connector import LocalConnector
 
 
 class SouthboundConnector(LocalConnector):
@@ -15,12 +16,9 @@ class SouthboundConnector(LocalConnector):
         self.engine = controller
 
     def on_message(self, client, userdata, message):
-        print("message topic=", message.topic)
-        print("message qos=", message.qos)
-        print("message retain flag=", message.retain)
-        deserialized_model = json.dumps(str(message.payload.decode("utf-8")))
-        sensor_id = deserialized_model.sensor_id
-        value = deserialized_model.value
+        deserialized_model = json.loads(str(message.payload.decode("utf-8")))
+        sensor_id = deserialized_model['sensor_id']
+        value = json.dumps(deserialized_model['value'])
         self.engine.apply(Message(sensor_id, value))
 
     def on_log(self, client, userdata, level, buf):
