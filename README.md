@@ -1,4 +1,4 @@
-# Chariot Privacy Engine
+# CharIoT Privacy Engine
 
 Chariot Privacy engine
 
@@ -7,7 +7,9 @@ Chariot Privacy engine
 ### Build docker images
 
 ```
-docker build --tag chariot_privacy_engine .
+docker login registry.gitlab.com
+docker build -t registry.gitlab.com/chariot-h2020/node-express .
+docker push registry.gitlab.com/chariot-h2020/node-express
 ```
 
 ## Features
