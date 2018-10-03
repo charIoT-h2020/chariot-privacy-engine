@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
+import json
 import falcon
 import falcon_jsonify
 
@@ -14,10 +15,13 @@ class SouthboundConnector(LocalConnector):
         self.engine = controller
 
     def on_message(self, client, userdata, message):
-        print("message received ", str(message.payload.decode("utf-8")))
         print("message topic=", message.topic)
         print("message qos=", message.qos)
         print("message retain flag=", message.retain)
+        deserialized_model = json.dumps(str(message.payload.decode("utf-8")))
+        sensor_id = deserialized_model.sensor_id
+        value = deserialized_model.value
+        self.engine.apply(Message(sensor_id, value))
 
     def on_log(self, client, userdata, level, buf):
         print("log[%s]: %s" % (level, buf))
