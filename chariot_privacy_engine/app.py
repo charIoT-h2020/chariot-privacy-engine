@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+import os
+import uuid
+import json
+import gmqtt
+import asyncio
+import signal
+
 import uuid
 import json
 import falcon
@@ -6,42 +15,84 @@ import falcon_jsonify
 
 from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
-from chariot_base.model import Message
+from chariot_base.model import Message, DataPointFactory
 from chariot_base.connector import LocalConnector
 
 
 class SouthboundConnector(LocalConnector):
-    def __init__(self, client_od, broker, controller):
-        super().__init__(client_od, broker)
-        self.engine = controller
+    def __init__(self, options):
+        super(SouthboundConnector, self).__init__()
+        self.engine = None
+        self.connector = None
+        self.point_factory = DataPointFactory(options['database'], options['table'])
 
-    def on_message(self, client, userdata, message):
-        deserialized_model = json.loads(str(message.payload.decode("utf-8")))
-        sensor_id = deserialized_model['sensor_id']
-        value = json.dumps(deserialized_model['value'])
-        self.engine.apply(Message(sensor_id, value))
+    def on_message(self, client, topic, payload, qos, properties):
+        point = self.to_data_point(payload, topic)
 
-    def on_log(self, client, userdata, level, buf):
-        print("log[%s]: %s" % (level, buf))
+    def set_up_engine(self, engine):
+        self.engine = engine
 
 
 class NorthboundConnector(LocalConnector):
-    def on_log(self, client, userdata, level, buf):
-        print("log[%s]: %s" % (level, buf))
+    def __init__(self, options):
+        super(NorthboundConnector, self).__init__()
+        self.engine = None
+        self.connector = None
+        self.point_factory = DataPointFactory(options['database'], options['table'])
+
+    def set_up_engine(self, engine):
+        self.engine = engine
 
 
-engine = Engine()
+STOP = asyncio.Event()
 
-southbound = SouthboundConnector('southbound_%s' % uuid.uuid4(), '172.18.1.2', engine)
-northbound = NorthboundConnector('northbound_%s' % uuid.uuid4(), '172.18.1.3')
 
-engine.inject(southbound, northbound)
-engine.start()
+def ask_exit(*args):
+    STOP.set()
 
-app = falcon.API(middleware=[
-    falcon_jsonify.Middleware(help_messages=True),
-])
 
-message = MessageResource(engine)
+async def main(args=None):
+    engine = Engine()
 
-app.add_route('/message', message)
+    filename = None
+    for name in ['./config.json', './tests/config.json']:
+        if os.path.isfile(name):
+            filename = name
+
+    if filename is None:
+        raise Exception('Configuration file is not exists')
+
+    with open('./tests/config.json', 'r') as read_file:
+        opts = json.load(read_file)
+
+    options_engine = opts['engine']['privacy']
+
+    southbound = SouthboundConnector(options_engine)
+    southbound.set_up_engine(engine)
+
+    northbound = NorthboundConnector(options_engine)
+    northbound.set_up_engine(engine)
+
+    engine.inject(southbound, northbound)
+    engine.start()
+
+    # app = falcon.API(middleware=[
+    #     falcon_jsonify.Middleware(help_messages=True),
+    # ])
+    #
+    # message = MessageResource(engine)
+    #
+    # app.add_route('/message', message)
+
+    await STOP.wait()
+    await client_south.disconnect()
+    await client_north.disconnect()
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+
+    loop.add_signal_handler(signal.SIGINT, ask_exit)
+    loop.add_signal_handler(signal.SIGTERM, ask_exit)
+
+    loop.run_until_complete(main())
