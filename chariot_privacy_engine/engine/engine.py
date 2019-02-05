@@ -22,16 +22,11 @@ class Engine(object):
         self.northbound = northbound
 
     def start(self):
-        self.southbound.start(False)
-        self.northbound.start(False)
-
         self.subscribe_to_southbound()
         self.subscribe_to_northbound()
 
     def subscribe_to_southbound(self):
-        self.southbound.subscribe([
-            ('privacy/#', 0)
-        ])
+        self.southbound.subscribe('privacy/#', qos=0)
 
     def subscribe_to_northbound(self):
         pass

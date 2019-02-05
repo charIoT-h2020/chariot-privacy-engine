@@ -56,12 +56,12 @@ async def main(args=None):
 
     southbound = SouthboundConnector(options_engine)
     southbound.set_up_engine(engine)
-    client_south = create_client(opts['brokers']['southbound'])
+    client_south = await create_client(opts['brokers']['southbound'])
     southbound.register_for_client(client_south)
 
     northbound = NorthboundConnector(options_engine)
     northbound.set_up_engine(engine)
-    client_north = create_client( opts['brokers']['northbound'])
+    client_north = await create_client( opts['brokers']['northbound'])
     northbound.register_for_client(client_north)
 
     engine.inject(southbound, northbound)
