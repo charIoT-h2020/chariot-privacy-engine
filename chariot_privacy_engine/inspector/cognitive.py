@@ -4,6 +4,7 @@ from chariot_base.model import Alert
 
 class CognitiveInspector(object):
     def __init__(self, engine):
+        self.human_name = "cognitive_inspector"
         self.engine = engine
 
     def check(self, message):

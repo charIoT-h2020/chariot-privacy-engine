@@ -4,6 +4,7 @@ from chariot_base.model import Alert
 
 class TopologyInspector(object):
     def __init__(self, engine):
+        self.human_name = "topology_inspector"
         self.engine = engine
         self.topology = {
             'temp:001': {
