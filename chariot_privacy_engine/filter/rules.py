@@ -8,6 +8,8 @@ from chariot_base.model import Alert
 class RsaRuleFilter(object):
 
     def __init__(self, engine):
+        self.human_name = 'rsa_rule_filter'
+
         self.engine = engine
         self.actors = {
             'bms': {
