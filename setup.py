@@ -13,6 +13,7 @@ with open('HISTORY.md') as history_file:
 
 requirements = [
     'falcon',
+    'gmqtt',
     'falcon_jsonify',
     'pycrypto',
     'ujson',
