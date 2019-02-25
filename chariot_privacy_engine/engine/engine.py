@@ -28,6 +28,13 @@ class Engine(object):
         self.subscribe_to_southbound()
         self.subscribe_to_northbound()
 
+    def inject_tracer(self, tracer):
+        self.tracer = tracer
+
+    def set_up_tracer(self, options):
+        self.tracer = Tracer(options)
+        self.tracer.init_tracer()
+
     def start_span(self, id, child_span=None):
         if self.tracer is None:
             return
