@@ -14,6 +14,7 @@ from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
 from chariot_base.model import Message
 from chariot_base.utilities import open_config_file
+from chariot_base.utilities.iotlwrap import IoTLWrapper
 from chariot_base.connector import LocalConnector, create_client
 
 
@@ -59,8 +60,13 @@ async def main(args=None):
 
     options_engine = opts['privacy_engine']
     options_tracer = opts['tracer']
+    options_topology = opts['topology']
+
+    ioTLWrapper = IoTLWrapper(options_topology)
+    ioTLWrapper.load()
 
     engine.set_up_tracer(options_tracer)
+    engine.inject_iotl(ioTLWrapper)
 
     southbound = SouthboundConnector(options_engine)
     southbound.set_up_engine(engine)

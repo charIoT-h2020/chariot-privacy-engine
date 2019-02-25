@@ -3,6 +3,7 @@ from ..filter import RsaRuleFilter
 from ..inspector import CognitiveInspector, TopologyInspector
 
 from chariot_base.utilities import Tracer
+from chariot_base.utilities.iotlwrap import IoTLWrapper
 
 
 class Engine(object):
@@ -10,6 +11,8 @@ class Engine(object):
         self.tracer = None
         self.southbound = None
         self.northbound = None
+
+        self.iotl = None
 
         self.inspectors = [
             CognitiveInspector(self),
@@ -30,6 +33,9 @@ class Engine(object):
 
     def inject_tracer(self, tracer):
         self.tracer = tracer
+
+    def inject_iotl(self, iotl):
+        self.iotl = iotl
 
     def set_up_tracer(self, options):
         self.tracer = Tracer(options)

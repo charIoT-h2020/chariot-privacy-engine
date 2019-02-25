@@ -10,4 +10,4 @@ class CognitiveInspector(object):
     def check(self, message):
         if message.value == 'AB00110':
             msg = 'Sensor %s returns sensitive information' % message.sensor_id
-            self.engine.raise_alert(Alert(msg, 100))
+            self.engine.raise_alert(Alert(self.human_name, msg, 100))
