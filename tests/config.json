@@ -46,5 +46,8 @@
         "database": "fog_logs",
         "table": "message",
         "listen": "dispatcher/#"
+    },
+	"topology": {
+        "filepath": "tests/office.iotl"
     }
 }
