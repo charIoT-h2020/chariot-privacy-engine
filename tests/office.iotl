@@ -3,4 +3,5 @@ define SENSOR CardReader --params { "privacySensitive": 1 }
 define SENSOR TemperatureSensor1 --params { "privacySensitive": 0 }
 define SENSOR TemperatureSensor2 --params { "privacySensitive": 0 }
 acl BMS CardReader ALLOW
-acl BMS TemperatureSensor DENY
+acl BMS TemperatureSensor1 DENY
+acl BMS TemperatureSensor2 ALLOW

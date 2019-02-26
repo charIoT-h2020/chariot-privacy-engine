@@ -55,13 +55,6 @@ class Engine(object):
             return
         span.finish()
 
-    def inject_tracer(self, tracer):
-        self.tracer = tracer
-
-    def set_up_tracer(self, options):
-        self.tracer = Tracer(options)
-        self.tracer.init_tracer()
-
     def subscribe_to_southbound(self):
         self.southbound.subscribe('privacy/#', qos=0)
 
