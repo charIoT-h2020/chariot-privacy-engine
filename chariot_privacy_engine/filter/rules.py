@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import logging
 
 from Crypto.PublicKey import RSA
 from chariot_base.model import Alert
@@ -25,7 +26,7 @@ class RsaRuleFilter(object):
 
     def do(self, message):
         rules = self.engine.iotl.acl(message.sensor_id)
-        print(rules)
+        logging.debug('Defined rules' % rules)
         if rules is not None:
             for rule in rules:
                 public_key = RSA.importKey(self.actors[rule[0]]['key'])

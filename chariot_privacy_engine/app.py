@@ -6,9 +6,7 @@ import json
 import gmqtt
 import asyncio
 import signal
-
-import falcon
-import falcon_jsonify
+import logging
 
 from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
@@ -29,6 +27,7 @@ class SouthboundConnector(LocalConnector):
         deserialized_model = json.loads(msg)
         sensor_id = deserialized_model['sensor_id']
         value = json.dumps(deserialized_model['value'])
+        logging.debug('Received from %s' % sensor_id)
         self.engine.apply(Message(sensor_id, value), span)
         self.close_span(span)
 
@@ -49,7 +48,7 @@ STOP = asyncio.Event()
 
 
 def ask_exit(*args):
-    print('Stoping....')
+    logging.info('Stoping....')
     STOP.set()
 
 
@@ -58,9 +57,9 @@ async def main(args=None):
 
     opts = open_config_file()
 
-    options_engine = opts['privacy_engine']
-    options_tracer = opts['tracer']
-    options_topology = opts['topology']
+    options_engine = opts.privacy_engine
+    options_tracer = opts.tracer
+    options_topology = opts.topology
 
     ioTLWrapper = IoTLWrapper(options_topology)
     ioTLWrapper.load()
@@ -71,27 +70,19 @@ async def main(args=None):
     southbound = SouthboundConnector(options_engine)
     southbound.set_up_engine(engine)
     southbound.inject_tracer(engine.tracer)
-    client_south = await create_client(opts['brokers']['southbound'])
+    client_south = await create_client(opts.brokers.southbound)
     southbound.register_for_client(client_south)
 
     northbound = NorthboundConnector(options_engine)
     northbound.set_up_engine(engine)
     northbound.inject_tracer(engine.tracer)
-    client_north = await create_client( opts['brokers']['northbound'])
+    client_north = await create_client(opts.brokers.northbound)
     northbound.register_for_client(client_north)
 
     engine.inject(southbound, northbound)
     engine.start()
 
-    # app = falcon.API(middleware=[
-    #     falcon_jsonify.Middleware(help_messages=True),
-    # ])
-    #
-    # message = MessageResource(engine)
-    #
-    # app.add_route('/message', message)
-
-    print('Waiting message from Southbound Dispatcher')
+    logging.info('Waiting message from Southbound Dispatcher')
     await STOP.wait()
     await client_south.disconnect()
     await client_north.disconnect()
@@ -104,4 +95,4 @@ if __name__ == '__main__':
     loop.add_signal_handler(signal.SIGTERM, ask_exit)
 
     loop.run_until_complete(main())
-    print('Stopped....')
+    logging.info('Stopped....')

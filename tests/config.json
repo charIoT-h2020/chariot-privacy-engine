@@ -49,5 +49,39 @@
     },
 	"topology": {
         "filepath": "tests/office.iotl"
+    },
+    "logging": {
+        "version": 1,
+        "handlers": {            
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "console"
+            }
+        },
+        "loggers": {
+            "chariot_privacy_engine.engine": {
+                "level": "DEBUG",
+                "handlers": [
+                    "console"
+                ]
+            }
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": [
+                "console"
+            ]
+        },
+        "formatters": {
+            "file": {
+                "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+            },
+            "console": {
+                "format": "%(levelname)s: %(message)s"
+            },
+            "debug": {
+                "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+            }
+        }
     }
 }
