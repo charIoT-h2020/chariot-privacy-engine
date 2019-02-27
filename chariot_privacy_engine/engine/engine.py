@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from ..filter import RsaRuleFilter
 from ..inspector import CognitiveInspector, TopologyInspector
 
@@ -84,4 +86,6 @@ class Engine(object):
         self.southbound.publish('northbound', str(message))
 
     def raise_alert(self, alert):
+        logging.debug(alert)
+        logging.debug(str(alert))
         self.northbound.publish('alerts', str(alert))

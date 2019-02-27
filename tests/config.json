@@ -60,7 +60,7 @@
         },
         "loggers": {
             "chariot_privacy_engine.engine": {
-                "level": "DEBUG",
+                "level": "INFO",
                 "handlers": [
                     "console"
                 ]

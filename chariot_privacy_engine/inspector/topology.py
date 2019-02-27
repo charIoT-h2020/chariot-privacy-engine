@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from iotl import interpreter
 from chariot_base.model import Alert
 
