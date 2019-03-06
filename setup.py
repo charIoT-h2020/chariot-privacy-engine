@@ -19,7 +19,7 @@ requirements = [
     'ujson',
     'paho-mqtt',
     'gunicorn',
-    'chariot_base'
+    'chariot_base==0.6.1'
 ]
 
 setup_requirements = [ ]
