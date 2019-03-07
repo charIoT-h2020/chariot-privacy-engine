@@ -11,7 +11,7 @@ class TopologyInspector(object):
         self.engine = engine
 
     def check(self, message):
-        if self.engine.iotl.isSensitive(message.sensor_id) == 0:
+        if self.engine.iotl.isSensitive(message.sensor_id) == True:
             msg = 'Sensor \'%s\' returns sensitive information' % message.sensor_id
             alert = Alert(self.human_name, msg, 50)
             alert.sensor_id = message.sensor_id

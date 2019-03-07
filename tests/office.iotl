@@ -1,7 +1,9 @@
 define GATEWAY BMS
-define SENSOR CardReader --params { "privacySensitive": 1 }
-define SENSOR TemperatureSensor1 --params { "privacySensitive": 0 }
-define SENSOR TemperatureSensor2 --params { "privacySensitive": 0 }
-acl BMS CardReader ALLOW
-acl BMS TemperatureSensor1 DENY
-acl BMS TemperatureSensor2 ALLOW
+define SENSOR device_52806c75c3fd_Sensor01 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor02 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor03 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor04 --params { "privacySensitive": 1 }
+acl BMS device_52806c75c3fd_Sensor01 DENY
+acl BMS device_52806c75c3fd_Sensor02 ALLOW
+acl BMS device_52806c75c3fd_Sensor03 ALLOW
+acl BMS device_52806c75c3fd_Sensor04 ALLOW
