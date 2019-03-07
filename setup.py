@@ -12,14 +12,19 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'falcon',
-    'gmqtt',
-    'falcon_jsonify',
-    'pycrypto',
-    'ujson',
     'paho-mqtt',
-    'gunicorn',
-    'chariot_base==0.6.3'
+    'asyncio',
+    'gmqtt',
+    'influxdb',
+    'cloudant',
+    'ibmiotf',
+    'pytest',
+    'fastecdsa',
+    'ecdsa',
+    'pycrypto',
+    'jaeger-client',
+    'pytest-asyncio',
+    'chariot_base==0.6.3' 
 ]
 
 setup_requirements = [ ]

@@ -5,8 +5,7 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
-RUN apk add gcc g++ make libffi-dev openssl-dev && python setup.py install
-RUN pip install falcon-jsonify
-EXPOSE 8010
+RUN apk add git gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev && pip install pytest && python setup.py install
+RUN cd iot-modeling-language && python setup.py install && cd ..
 
-ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/usr/src/app/gunicorn.py", "chariot_privacy_engine.app:app"]
+CMD ["python", "./chariot_privacy_engine/app.py"]
