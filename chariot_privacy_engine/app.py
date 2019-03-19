@@ -22,9 +22,9 @@ class SouthboundConnector(LocalConnector):
         self.engine = None
 
     def on_message(self, client, topic, payload, qos, properties):
-        span = self.start_span('on_message')
         msg = payload.decode('utf-8')
         deserialized_model = json.loads(msg)
+        span = self.start_span_from_message('on_message', deserialized_model)
         sensor_id = deserialized_model['sensor_id']
         value = json.dumps(deserialized_model['value'])
         logging.debug('Received from %s' % sensor_id)
