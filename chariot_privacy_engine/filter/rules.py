@@ -24,7 +24,7 @@ class RsaRuleFilter(object):
             }
         }
 
-    def do(self, message):
+    def do(self, message, span):
         rules = self.engine.iotl.acl(message.sensor_id)
         logging.debug('Defined rules' % rules)
         if rules is not None:
@@ -33,5 +33,5 @@ class RsaRuleFilter(object):
                 encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
                 message.value = base64.b64encode(encrypted_msg).decode('utf-8')
                 message.destination = rule[0]
-                self.engine.publish(message)
+                self.engine.publish(message, span)
 

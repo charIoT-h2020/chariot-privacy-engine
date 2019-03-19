@@ -59,7 +59,7 @@
             }
         },
         "loggers": {
-            "chariot_privacy_engine.engine": {
+            "gmqtt": {
                 "level": "INFO",
                 "handlers": [
                     "console"
@@ -67,7 +67,7 @@
             }
         },
         "root": {
-            "level": "INFO",
+            "level": "DEBUG",
             "handlers": [
                 "console"
             ]
