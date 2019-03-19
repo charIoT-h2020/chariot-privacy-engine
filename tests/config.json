@@ -15,7 +15,7 @@
         }
     },
     "local_storage": {
-        "host": "192.168.2.24",
+        "host": "linux.machine",
         "port": 8086,
         "username": "root",
         "password": "root",
@@ -23,18 +23,18 @@
     },
     "brokers": {
         "southbound": {
-            "host": "192.168.2.24",
+            "host": "linux.machine",
             "port": 1883,
             "username": ""
         },
         "northbound": {
-            "host": "192.168.2.24",
-            "port": 1883,
+            "host": "linux.machine",
+            "port": 1884,
             "username": ""
         }
     },
     "tracer" : {
-        "host": "192.168.2.24",
+        "host": "linux.machine",
         "enabled": true,
         "port": 5775,
         "service": "privacy-engine"
