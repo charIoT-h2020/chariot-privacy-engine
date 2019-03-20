@@ -27,8 +27,11 @@ class SouthboundConnector(LocalConnector):
         span = self.start_span_from_message('on_message', deserialized_model)
         sensor_id = deserialized_model['sensor_id']
         value = json.dumps(deserialized_model['value'])
-        logging.debug('Received from %s' % sensor_id)
-        self.engine.apply(Message(sensor_id, value), span)
+        message = Message(sensor_id, value)
+        message.id = deserialized_model['package_id']
+        
+        logging.debug('Received packet "%s" from "%s"' % (message.id, sensor_id))
+        self.engine.apply(message, span)
         self.close_span(span)
 
     def set_up_engine(self, engine):

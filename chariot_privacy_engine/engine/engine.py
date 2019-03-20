@@ -63,8 +63,9 @@ class Engine(Traceable):
             self.close_span(span)
 
     def publish(self, message, span):
-        m = self.inject_to_message(span, message.dict())
+        m = self.inject_to_message(span, message.dict())        
         self.southbound.publish('northbound', json.dumps(m))
+        logging.debug('Publish message from "%s" to "%s"' % (message.sensor_id, message.destination))
 
     def raise_alert(self, alert, span):
         m = json.dumps(self.inject_to_message(span, alert.dict()))
