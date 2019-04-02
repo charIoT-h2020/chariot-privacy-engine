@@ -15,23 +15,18 @@ class RsaRuleFilter(object):
         self.human_name = 'rsa_rule_filter'
 
         self.engine = engine
-        self.actors = {
-            'BMS': {
-                'key': b'-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV'
-                       b'\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd'
-                       b'/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n'
-                       b'-----END PUBLIC KEY----- '
-            }
-        }
 
     def do(self, message, span):
         rules = self.engine.iotl.acl(message.sensor_id)
-        logging.debug('Defined rules: %s for sensor: %s' % (rules, message.sensor_id))
+        logging.debug('Defined rules: %s for sensor: %s' %
+                      (rules, message.sensor_id))
         if rules is not None:
             for rule in rules:
-                # public_key = RSA.importKey(self.actors[rule[0]]['key'])
-                # encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
+                params = self.engine.iotl.params(rule[0])
+                if params['type'] == 'RSA':
+                    public_key = RSA.importKey(params['pubkey'])                    
+                    encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
+                    print(base64.b64encode(encrypted_msg).decode('utf-8'))
                 # message.value = base64.b64encode(encrypted_msg).decode('utf-8')
                 message.destination = rule[0]
                 self.engine.publish(message, span)
-
