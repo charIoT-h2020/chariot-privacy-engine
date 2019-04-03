@@ -1,15 +1,20 @@
 define ZONE Office
 define GATEWAY BMS --params { "pubkey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n-----END PUBLIC KEY-----", "type": "RSA" }
+define GATEWAY Dashboard
 register BMS -> Office
+register Dashboard -> Office
 define SENSOR device_52806c75c3fd_Sensor01 --params { "privacySensitive": 0 }
 define SENSOR device_52806c75c3fd_Sensor02 --params { "privacySensitive": 0 }
 define SENSOR device_52806c75c3fd_Sensor03 --params { "privacySensitive": 0 }
 define SENSOR device_52806c75c3fd_Sensor04 --params { "privacySensitive": 1 }
+define SENSOR device_52806c75c3fd_Sensor05 --params { "privacySensitive": 0 }
 register device_52806c75c3fd_Sensor01 -> BMS
 register device_52806c75c3fd_Sensor02 -> BMS
 register device_52806c75c3fd_Sensor03 -> BMS
 register device_52806c75c3fd_Sensor04 -> BMS
+register device_52806c75c3fd_Sensor05 -> Dashboard
 acl BMS device_52806c75c3fd_Sensor01 DENY
 acl BMS device_52806c75c3fd_Sensor02 ALLOW
 acl BMS device_52806c75c3fd_Sensor03 ALLOW
 acl BMS device_52806c75c3fd_Sensor04 ALLOW
+acl Dashboard device_52806c75c3fd_Sensor05 ALLOW

@@ -13,20 +13,34 @@ class RsaRuleFilter(object):
 
     def __init__(self, engine):
         self.human_name = 'rsa_rule_filter'
-
         self.engine = engine
 
     def do(self, message, span):
         rules = self.engine.iotl.acl(message.sensor_id)
         logging.debug('Defined rules: %s for sensor: %s' %
                       (rules, message.sensor_id))
-        if rules is not None:
+        if rules is not None or len(rules) == 0:
             for rule in rules:
-                params = self.engine.iotl.params(rule[0])
-                if params['type'] == 'RSA':
+                destination = rule[0]
+                params = self.engine.iotl.params(destination)
+                if params.get('type', None) == 'RSA':
+                    encrypt_span = self.engine.start_span('encrypt_%s' % self.human_name, span)
                     public_key = RSA.importKey(params['pubkey'])                    
                     encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
-                    print(base64.b64encode(encrypted_msg).decode('utf-8'))
-                # message.value = base64.b64encode(encrypted_msg).decode('utf-8')
-                message.destination = rule[0]
-                self.engine.publish(message, span)
+                    encoded_msg = base64.b64encode(encrypted_msg).decode('utf-8')
+                    self.engine.close_span(encrypt_span)
+                    logging.debug('Encrypted message: %s' % encoded_msg)
+                    # message.value = base64.b64encode(encrypted_msg).decode('utf-8')
+                    message.destination = destination
+                    self.engine.publish(message, span)
+                else:
+                    msg = 'Public key for \'%s\' consumer is not defined.' % destination
+                    alert = Alert(self.human_name, msg, 100)
+                    alert.sensor_id = message.sensor_id
+                    self.engine.raise_alert(alert, span)
+
+        else:
+            msg = 'Package from sensor \'{sensor_id}\' are not allowed to be delivered to anyone'.format(**message)
+            alert = Alert(self.human_name, msg, 100)
+            alert.sensor_id = message.sensor_id
+            self.engine.raise_alert(alert, span)
