@@ -71,3 +71,12 @@ class Engine(Traceable):
         m = json.dumps(self.inject_to_message(span, alert.dict()))
         logging.debug(m)
         self.northbound.publish('alerts', m)
+
+    def get_acl(self, span, message):
+        return self.iotl.acl(message.sensor_id)
+    
+    def get_params(self, span, destination):
+        return self.iotl.params(destination)
+
+    def is_sensitive(self, span, message):
+        return self.engine.iotl.isSensitive(message.sensor_id)

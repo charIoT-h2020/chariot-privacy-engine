@@ -16,7 +16,7 @@ class RsaRuleFilter(object):
         self.engine = engine
 
     def do(self, message, span):
-        rules = self.engine.iotl.acl(message.sensor_id)
+        rules = self.engine.get_acl(span, message)
         logging.debug('Defined rules: %s for sensor: %s' %
                       (rules, message.sensor_id))
         if rules is None or len(rules) == 0:
@@ -28,7 +28,7 @@ class RsaRuleFilter(object):
         else:
             for rule in rules:
                 destination = rule[0]
-                params = self.engine.iotl.params(destination)
+                params = self.engine.get_params(span, destination)
                 if params.get('type', None) == 'RSA':
                     encrypt_span = self.engine.start_span(
                         'encrypt_%s' % self.human_name, span)
