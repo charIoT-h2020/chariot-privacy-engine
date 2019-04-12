@@ -50,6 +50,7 @@ class Engine(Traceable):
 
     def apply(self, message, child_span):
         span = self.start_span('apply', child_span)
+        self.sync_iotl(span)
         self.filter(message, span)
         self.inspect(message, span)
         self.close_span(span)
@@ -85,3 +86,14 @@ class Engine(Traceable):
 
     def is_sensitive(self, span, message):
         return self.iotl.isSensitive(message.sensor_id)
+
+    def sync_iotl(self, span):
+        logging.debug('Sync IoTL')
+        if self.iotl_url is not None:
+            url = self.iotl_url
+            headers = self.inject_to_request_header(span, url)
+            self.set_tag(span, 'url', url)
+            logging.debug('Sync IoTL')
+            result = self.session.get(url, headers=headers)
+            current_iotl = result.json()
+            self.iotl.load(current_iotl['code'])
