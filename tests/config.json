@@ -48,7 +48,8 @@
         "listen": "dispatcher/#"
     },
 	"topology": {
-        "filepath": "tests/office.iotl"
+        "filepath": "tests/office.iotl",
+        "iotl_url": "http://linux.machine:8080/iotl/model"
     },
     "logging": {
         "version": 1,

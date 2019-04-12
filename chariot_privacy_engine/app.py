@@ -67,9 +67,10 @@ async def main(args=None):
 
     ioTLWrapper = IoTLWrapper(options_topology)
     ioTLWrapper.load()
-
+    
     engine.set_up_tracer(options_tracer)
     engine.inject_iotl(ioTLWrapper)
+    engine.set_up_iotl_url(options_topology['iotl_url'])
 
     southbound = SouthboundConnector(options_engine)
     southbound.set_up_engine(engine)

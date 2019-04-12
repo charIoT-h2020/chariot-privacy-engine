@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import json
+import requests
 
 from ..filter import RsaRuleFilter
 from ..inspector import CognitiveInspector, TopologyInspector
@@ -16,12 +17,13 @@ class Engine(Traceable):
         self.northbound = None
 
         self.iotl = None
+        self.session = requests.Session()
+        self.session.trust_env = False
 
         self.inspectors = [
             CognitiveInspector(self),
             TopologyInspector(self)
         ]
-
         self.filters = [
             RsaRuleFilter(self)
         ]
@@ -36,6 +38,9 @@ class Engine(Traceable):
 
     def inject_iotl(self, iotl):
         self.iotl = iotl
+
+    def set_up_iotl_url(self, iotl_url):
+        self.iotl_url = iotl_url
 
     def subscribe_to_southbound(self):
         self.southbound.subscribe('privacy/#', qos=0)
@@ -79,4 +84,4 @@ class Engine(Traceable):
         return self.iotl.params(destination)
 
     def is_sensitive(self, span, message):
-        return self.engine.iotl.isSensitive(message.sensor_id)
+        return self.iotl.isSensitive(message.sensor_id)

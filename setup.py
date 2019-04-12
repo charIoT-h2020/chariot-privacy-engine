@@ -19,6 +19,7 @@ requirements = [
     'cloudant',
     'ibmiotf',
     'pytest',
+    'requests',
     'fastecdsa',
     'ecdsa',
     'pycrypto',
