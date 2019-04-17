@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+hide footbox
+
+
+box "Privacy Engine" #LightBlue
+    participant "Engine" as pe
+    participant "Filter" as enc
+    participant "Inspector" as insp
+end box
+
+participant "Topology \nService" as ts
+participant "Blockchain PKI" as ba
+participant "Alerts \nDigester" as ad
+
+box "Northbound" #LightBlue
+    participant "Dispatcher" as nd
+    participant "Subscribers" as nsub
+    participant "Broker" as nbrok
+end box
+
+[->  pe: Receive a package
+activate pe
+
+pe -> ts ++: Retrieve network info
+ts --> pe --: Return info
+
+pe -> insp ++: Check for sensitive information
+alt Expose sensitive informations
+    insp -> ad--: Raise alert
+end 
+pe -> enc ++: Encrypt package \nfor the receipient
+enc -> ba ++: Check public \nkey validity
+ba --> enc --: Get result
+alt public key is invalid
+    enc -> ad: Raise alert
+else empty list with granted users
+    enc -> ad: Raise alert
+else
+    enc --> pe--: Return package
+end
+
+pe -> nd --: Forward to \n the receipient
+activate nd
+nd -> nsub ++: Get subscribers
+nsub -> nd --: Return subscribers
+nd -> nbrok --: Publish message for subscribers
+
+@enduml
