@@ -1,0 +1,44 @@
+@startuml
+skinparam componentStyle uml2
+skinparam monochrome true
+
+component listen [
+= Listeners
+1. Listen for message at a specific topic.
+]
+
+component sync [
+= Topology Synchronization
+1. Update IoT Network information.
+2. Update access control list from \n    Topology Service.
+]
+
+component inspector as "
+= Inspector
+1. Based of sensor type.
+2. Based on sensor installation position.
+3. Correlation between sensor data
+4. Analysis at package payload"
+
+component pki as "
+= Blockchain PKI
+1. Verify validity of \n    receipient's public key. 
+"
+
+component filter as "
+= Filters
+1. Asymmetric cryptography
+2. Data anonymization
+"
+
+component forward as "
+= Forward
+1. Forward package to \n    Northbound
+"
+
+listen -right-> sync
+sync -up-> inspector
+sync -down-> pki
+pki -right-> filter
+filter -right-> forward
+@enduml
