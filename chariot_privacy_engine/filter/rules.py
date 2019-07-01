@@ -32,7 +32,7 @@ class RsaRuleFilter(object):
                 if params.get('type', None) == 'RSA':
                     encrypt_span = self.engine.start_span(
                         'encrypt_%s' % self.human_name, span)
-                    public_key = RSA.importKey(params['pubkey'])
+                    public_key = RSA.importKey(base64.b64decode(params['pubkey']))
                     encrypted_msg = public_key.encrypt(
                         message.value.encode('utf-8'), 32)[0]
                     encoded_msg = base64.b64encode(

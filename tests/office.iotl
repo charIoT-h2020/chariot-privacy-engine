@@ -1,5 +1,5 @@
 define ZONE Office
-define GATEWAY BMS --params { "pubkey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n-----END PUBLIC KEY-----", "type": "RSA" }
+define GATEWAY BMS --params { "pubkey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlvpBSa4JE87BgBKixnX5qkiB2XcTsJekD3ubtqaWE5WbakkcIvtuHbD0439SFF9HRrj2migJfzPSeWk74cHrBlVWq9jNAQx4HbH2/I5pvDd6jAB+xKrOZ0iQD7Vc8eN7IZBhLgvwsDKZL0s1s7NtosIzjL8BcHTXOZCsmJuccWKYLVSpZ+ffm926kbD5E0lsWhJgDkZ5vtsIed38cTdMJ3oyx9DJy9Jdx2YECHDmm+uQMRoACoNx5L4RdJA280F0amzIhq33wBIKBdwaqrEDKtkTiefGKZnFIpMFp3JWCkvttG4KBxamjH+26GxUmMMQkkqhKUbCtfRHWmmgo40wrwIDAQAB", "type": "RSA" }
 define GATEWAY Dashboard
 register BMS -> Office
 register Dashboard -> Office
@@ -18,3 +18,10 @@ acl BMS device_52806c75c3fd_Sensor02 ALLOW
 acl BMS device_52806c75c3fd_Sensor03 ALLOW
 acl BMS device_52806c75c3fd_Sensor04 ALLOW
 acl Dashboard device_52806c75c3fd_Sensor05 ALLOW
+
+schema EmployeeID "\d{4}-\d{4}-\d{4}-\d{4}" --private
+schema FloatNumber "[-+]?[0-9]*\.?[0-9]*"
+
+expect S03 EmployeeID
+expect S04 ID
+
