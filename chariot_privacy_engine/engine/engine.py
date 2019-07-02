@@ -4,7 +4,7 @@ import json
 import requests
 
 from ..filter import RsaRuleFilter
-from ..inspector import CognitiveInspector, TopologyInspector
+from ..inspector import CognitiveInspector, TopologyInspector, SchemaInspector
 
 from chariot_base.utilities import Traceable
 from chariot_base.utilities.iotlwrap import IoTLWrapper
@@ -15,6 +15,7 @@ class Engine(Traceable):
         self.tracer = None
         self.southbound = None
         self.northbound = None
+        self.schema = []
 
         self.iotl = None
         self.session = requests.Session()
@@ -22,7 +23,8 @@ class Engine(Traceable):
 
         self.inspectors = [
             CognitiveInspector(self),
-            TopologyInspector(self)
+            TopologyInspector(self),
+            SchemaInspector(self)
         ]
         self.filters = [
             RsaRuleFilter(self)
@@ -87,6 +89,9 @@ class Engine(Traceable):
     def is_sensitive(self, span, message):
         return self.iotl.isSensitive(message.sensor_id)
 
+    def is_match(self, span, schema, message):
+        return self.iotl.is_match(schema, message.value.encode('utf-8'))
+
     def sync_iotl(self, span):
         logging.debug('Sync IoTL')
         if self.iotl_url is not None:
@@ -97,3 +102,4 @@ class Engine(Traceable):
             result = self.session.get(url, headers=headers)
             current_iotl = result.json()
             self.iotl.load(current_iotl['code'])
+            self.schema = self.iotl.schema(True)
