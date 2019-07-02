@@ -13,11 +13,10 @@ class SchemaInspector(object):
 
     def check(self, message, span):
         sid = message.sensor_id
-
-        for schema in self.engine.schema:            
+        for schema in self.engine.schema: 
             if self.engine.is_match(span, schema, message) == True:
                 if sid not in schema['sensors']:
-                    msg = f'Sensor \'{sid}\' payload matches private schema \'{schema['pattern']}\''
+                    msg = f'Sensor\'s \'{sid}\' payload matches private schema \'{schema["pattern"]}\''
                     alert = Alert(self.human_name, msg, SchemaInspector.SEVERITY)
                     alert.sensor_id = sid
                     self.engine.raise_alert(alert, span)

@@ -19,9 +19,9 @@ acl BMS device_52806c75c3fd_Sensor03 ALLOW
 acl BMS device_52806c75c3fd_Sensor04 ALLOW
 acl Dashboard device_52806c75c3fd_Sensor05 ALLOW
 
-schema EmployeeID "\d{4}-\d{4}-\d{4}-\d{4}" --private
-schema FloatNumber "[-+]?[0-9]*\.?[0-9]*"
+schema EmployeeID --pattern "\d{4}-\d{4}-\d{4}-\d{4}" --private
+schema FloatNumber --pattern "[-+]?[0-9]*\.?[0-9]*"
 
 expect S03 EmployeeID
-expect S04 ID
+expect S04 EmployeeID
 

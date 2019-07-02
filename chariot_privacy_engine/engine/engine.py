@@ -90,16 +90,15 @@ class Engine(Traceable):
         return self.iotl.isSensitive(message.sensor_id)
 
     def is_match(self, span, schema, message):
-        return self.iotl.is_match(schema, message.value.encode('utf-8'))
+        return self.iotl.is_match(schema, message.value)
 
     def sync_iotl(self, span):
-        logging.debug('Sync IoTL')
         if self.iotl_url is not None:
             url = self.iotl_url
             headers = self.inject_to_request_header(span, url)
             self.set_tag(span, 'url', url)
-            logging.debug('Sync IoTL')
             result = self.session.get(url, headers=headers)
+            logging.debug('Topology is updated')
             current_iotl = result.json()
             self.iotl.load(current_iotl['code'])
             self.schema = self.iotl.schema(True)
