@@ -29,7 +29,7 @@ class RsaRuleFilter(object):
             for rule in rules:
                 destination = rule[0]
                 params = self.engine.get_params(span, destination)
-                if params.get('type', None) == 'RSA':
+                if params.get('pubkey_type', None) == 'RSA':
                     encrypt_span = self.engine.start_span(
                         'encrypt_%s' % self.human_name, span)
                     public_key = RSA.importKey(base64.b64decode(params['pubkey']))
