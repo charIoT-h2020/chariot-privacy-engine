@@ -29,21 +29,42 @@ class RsaRuleFilter(object):
             for rule in rules:
                 destination = rule[0]
                 params = self.engine.get_params(span, destination)
-                if params.get('pubkey_type', None) == 'RSA':
-                    encrypt_span = self.engine.start_span(
-                        'encrypt_%s' % self.human_name, span)
-                    public_key = RSA.importKey(base64.b64decode(params['pubkey']))
-                    encrypted_msg = public_key.encrypt(
-                        message.value.encode('utf-8'), 32)[0]
-                    encoded_msg = base64.b64encode(
-                        encrypted_msg).decode('utf-8')
-                    self.engine.close_span(encrypt_span)
-                    logging.debug('Encrypted message: %s' % encoded_msg)
-                    # message.value = base64.b64encode(encrypted_msg).decode('utf-8')
-                    message.destination = destination
-                    self.engine.publish(message, span)
+                key_type = params.get('pubkey_type', None)
+                if key_type == 'None':
+                    message = self.no_encyption(message)
+                if key_type == 'RSA':
+                    message = self.rsa_encyption(span, params, message)
+                if key_type == 'ECDH':
+                    message = self.ecdh_encyption(span, params, message)
+                    continue
                 else:
                     msg = 'Public key for \'%s\' consumer is not defined.' % destination
                     alert = Alert(self.human_name, msg, 100)
                     alert.sensor_id = message.sensor_id
                     self.engine.raise_alert(alert, span)
+                    continue
+
+                message.destination = destination
+                self.engine.publish(message, span)
+
+    def no_encyption(self, message):
+        return message
+
+    def ecdh_encyption(self, span, params, message):
+        encrypt_span = self.engine.start_span('ecdh_encrypt_%s' % self.human_name, span)
+        msg = 'The ECDH encyption scheme is not supported yet.'
+        alert = Alert(self.human_name, msg, 100)
+        alert.sensor_id = message.sensor_id
+        self.engine.raise_alert(alert, span)
+        self.engine.close_span(encrypt_span)
+        return message
+
+    def rsa_encyption(self, span, params, message):
+        encrypt_span = self.engine.start_span('rsa_encrypt_%s' % self.human_name, span)
+        public_key = RSA.importKey(base64.b64decode(params['pubkey']))
+        encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
+        encoded_msg = base64.b64encode(encrypted_msg).decode('utf-8')
+        logging.debug('Encrypted message: %s' % encoded_msg)
+        message.value = encoded_msg
+        self.engine.close_span(encrypt_span)
+        return message
