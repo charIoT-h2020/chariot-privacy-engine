@@ -11,7 +11,7 @@ import logging
 from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
 from chariot_base.model import Message
-from chariot_base.utilities import open_config_file
+from chariot_base.utilities import open_config_file, HealthCheck
 from chariot_base.utilities.iotlwrap import IoTLWrapper
 from chariot_base.connector import LocalConnector, create_client
 
@@ -21,7 +21,16 @@ class SouthboundConnector(LocalConnector):
         super(SouthboundConnector, self).__init__()
         self.engine = None
 
+        if 'health' in options:
+            logging.info('Enabling health checks endpoints')
+            self.health = HealthCheck(options['name']).inject_connector(self)
+            self.healthTopic = options['health']['endpoint']
+
     def on_message(self, client, topic, payload, qos, properties):
+        if topic == self.healthTopic:
+            self.health.do(payload)
+            return
+
         msg = payload.decode('utf-8')
         deserialized_model = json.loads(msg)
         span = self.start_span_from_message('on_message', deserialized_model)
