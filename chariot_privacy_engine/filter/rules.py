@@ -32,9 +32,9 @@ class RsaRuleFilter(object):
                 key_type = params.get('pubkey_type', None)
                 if key_type == 'None':
                     message = self.no_encyption(message)
-                if key_type == 'RSA':
+                elif key_type == 'RSA':
                     message = self.rsa_encyption(span, params, message)
-                if key_type == 'ECDH':
+                elif key_type == 'ECDH':
                     message = self.ecdh_encyption(span, params, message)
                     continue
                 else:
