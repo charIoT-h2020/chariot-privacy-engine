@@ -4,4 +4,4 @@
 
 __author__ = """George Theofilis"""
 __email__ = 'g.theofilis@clmsuk.com'
-__version__ = '0.8.0'
+__version__ = '0.8.1'
