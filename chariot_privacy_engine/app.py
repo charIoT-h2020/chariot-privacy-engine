@@ -35,15 +35,22 @@ class SouthboundConnector(LocalConnector):
         msg = payload.decode('utf-8')
         deserialized_model = json.loads(msg)
         span = self.start_span_from_message('on_message', deserialized_model)
-        sensor_id = deserialized_model['sensor_id']
-        value = json.dumps(deserialized_model['value'])
-        message = Message(sensor_id, value)
-        message.id = deserialized_model['package_id']
 
-        logging.debug('Received packet "%s" from "%s"' %
-                      (message.id, sensor_id))
-        self.engine.apply(message, span)
-        self.close_span(span)
+        try:
+            sensor_id = deserialized_model['sensor_id']
+            value = json.dumps(deserialized_model['value'])
+            message = Message(sensor_id, value)
+            message.id = deserialized_model['package_id']
+
+            logging.debug('Received packet "%s" from "%s"' %
+                        (message.id, sensor_id))
+            self.engine.apply(message, span)
+            self.close_span(span)
+        except Exception as ex:
+            logging.error(ex)
+            self.set_tag(span, 'is_ok', False)
+            self.error(span, ex, False)
+            self.close_span(span)
 
     def set_up_engine(self, engine):
         self.engine = engine
