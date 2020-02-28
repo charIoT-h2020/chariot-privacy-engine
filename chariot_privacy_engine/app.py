@@ -8,6 +8,7 @@ import asyncio
 import signal
 import logging
 
+from chariot_privacy_engine import __service_name__
 from chariot_privacy_engine.resources import MessageResource
 from chariot_privacy_engine.engine import Engine
 from chariot_base.model import Message
@@ -77,7 +78,11 @@ async def main(args=None):
     ioTLWrapper = IoTLWrapper(options_topology)
     ioTLWrapper.load()
     
-    engine.set_up_tracer(options_tracer)
+    if options_tracer['enabled'] is True:
+        options_tracer['service'] = __service_name__
+        logging.info(f'Enabling tracing for service "{__service_name__}"')
+        engine.set_up_tracer(options_tracer)
+
     engine.inject_iotl(ioTLWrapper)
     engine.set_up_iotl_url(options_topology['iotl_url'])
 
