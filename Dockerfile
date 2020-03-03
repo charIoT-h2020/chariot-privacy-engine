@@ -1,11 +1,10 @@
-FROM python:3.6-alpine
+FROM registry.gitlab.com/chariot-h2020/chariot_base:latest
 
 WORKDIR /usr/src/app
 
 # Bundle app source
 COPY . .
 
-RUN apk add git gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev && pip install pytest && python setup.py install
-RUN cd iot-modeling-language && python setup.py install && cd ..
+RUN python setup.py install
 
 CMD ["python", "./chariot_privacy_engine/app.py"]
