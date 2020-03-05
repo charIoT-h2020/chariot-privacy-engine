@@ -12,7 +12,7 @@ class TopologyInspector(object):
 
     def check(self, message, span):
         if self.engine.is_sensitive(span, message) == True:
-            msg = 'Sensor \'%s\' returns sensitive information' % message.sensor_id
+            msg = f'Sensor \'{message.sensor_id}\' returns sensitive information'
             alert = Alert(self.human_name, msg, 50)
             alert.sensor_id = message.sensor_id
             self.engine.raise_alert(alert, span)

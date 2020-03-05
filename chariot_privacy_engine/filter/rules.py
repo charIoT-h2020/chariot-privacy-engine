@@ -19,15 +19,13 @@ class RsaRuleFilter(object):
         rules = self.engine.get_acl(span, message)
         logging.debug('Defined rules: %s for sensor: %s' %
                       (rules, message.sensor_id))
-        if rules is None or len(rules) == 0:
-            msg = 'Package from sensor \'{sensor_id}\' is not allowed to be delivered to anyone'.format(
-                **message.dict())
+        if rules is None or len(rules['ALLOW']) == 0:
+            msg = f'Package from sensor \'{message.sensor_id}\' is not allowed to be delivered to anyone'
             alert = Alert(self.human_name, msg, 100)
             alert.sensor_id = message.sensor_id
             self.engine.raise_alert(alert, span)
         else:
-            for rule in rules:
-                destination = rule[0]
+            for destination in rules['ALLOW']:
                 params = self.engine.get_params(span, destination)
                 key_type = params.get('pubkey_type', None)
                 if key_type == 'None':

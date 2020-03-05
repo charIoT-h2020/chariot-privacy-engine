@@ -9,9 +9,10 @@ from ..inspector import CognitiveInspector, TopologyInspector, SchemaInspector
 from chariot_base.utilities import Traceable
 from chariot_base.utilities.iotlwrap import IoTLWrapper
 
+from datetime import datetime, timedelta
 
 class Engine(Traceable):
-    def __init__(self):
+    def __init__(self, options={}):
         self.tracer = None
         self.southbound = None
         self.northbound = None
@@ -20,6 +21,8 @@ class Engine(Traceable):
         self.iotl = None
         self.session = requests.Session()
         self.session.trust_env = False
+        self.options = options
+        self.last_sync_datetime = None
 
         self.inspectors = [
             CognitiveInspector(self),
@@ -93,12 +96,23 @@ class Engine(Traceable):
         return self.iotl.is_match(schema, message.value)
 
     def sync_iotl(self, span):
-        if self.iotl_url is not None:
+        if self.iotl_url is None:
+            return
+        
+        if self.should_sync_iotl():
+            logging.debug('Sync topology')
             url = self.iotl_url
             headers = self.inject_to_request_header(span, url)
             self.set_tag(span, 'url', url)
             result = self.session.get(url, headers=headers)
-            logging.debug('Topology is updated')
             current_iotl = result.json()
             self.iotl.load(current_iotl['code'])
             self.schema = self.iotl.schema(True)
+
+            self.last_sync_datetime = datetime.now()
+
+    def should_sync_iotl(self):
+        if self.last_sync_datetime is None:
+            return True
+        
+        return datetime.now() - self.last_sync_datetime >= timedelta(seconds=self.options.get('iotl_sync_delay', 60))

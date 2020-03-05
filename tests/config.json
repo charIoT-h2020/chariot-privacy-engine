@@ -45,6 +45,7 @@
         "health": {
             "endpoint": "privacy/_health"
         },
+        "iotl_sync_delay": 300,
         "database": "fog_logs",
         "table": "message",
         "listen": "dispatcher/#"

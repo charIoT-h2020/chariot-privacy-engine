@@ -74,7 +74,6 @@ def ask_exit(*args):
 
 
 async def main(args=None):
-    engine = Engine()
 
     opts = open_config_file()
 
@@ -82,6 +81,7 @@ async def main(args=None):
     options_tracer = opts.tracer
     options_topology = opts.topology
 
+    engine = Engine(options_engine)
     ioTLWrapper = IoTLWrapper(options_topology)
     ioTLWrapper.load()
     
