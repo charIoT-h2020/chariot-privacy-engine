@@ -33,6 +33,14 @@ class Engine(Traceable):
             RsaRuleFilter(self)
         ]
 
+        self.muted_options = self.options.get('mute', {})
+        for _inspector in self.inspectors:
+            if _inspector.human_name not in self.muted_options:
+                self.muted_options[_inspector.human_name] = False
+        for _filters in self.filters:
+            if _filters.human_name not in self.muted_options:
+                self.muted_options[_filters.human_name] = False
+
     def inject(self, southbound, northbound):
         self.southbound = southbound
         self.northbound = northbound
@@ -63,15 +71,21 @@ class Engine(Traceable):
 
     def inspect(self, message, child_span):
         for _inspector in self.inspectors:
-            span = self.start_span('filter_%s' % _inspector.human_name, child_span)
-            _inspector.check(message, span)
-            self.close_span(span)
+            if self.is_not_muted(_inspector.human_name):
+                span = self.start_span(f'filter_{_inspector.human_name}', child_span)
+                _inspector.check(message, span)
+                self.close_span(span)
+            else:
+                logging.debug(f'Rule {_inspector.human_name} is muted')
 
     def filter(self, message, child_span):
         for _filter in self.filters:
-            span = self.start_span('filter_%s' % _filter.human_name, child_span)
-            _filter.do(message, span)
-            self.close_span(span)
+            if self.is_not_muted(_filter.human_name):
+                span = self.start_span(f'filter_{_filter.human_name}', child_span)
+                _filter.do(message, span)
+                self.close_span(span)
+            else:
+                logging.debug(f'Rule {_filter.human_name} is muted')
 
     def publish(self, message, span):
         m = self.inject_to_message(span, message.dict())        
@@ -114,5 +128,7 @@ class Engine(Traceable):
     def should_sync_iotl(self):
         if self.last_sync_datetime is None:
             return True
-        
         return datetime.now() - self.last_sync_datetime >= timedelta(seconds=self.options.get('iotl_sync_delay', 60))
+
+    def is_not_muted(self, id, message=None):
+        return not self.muted_options[id]
