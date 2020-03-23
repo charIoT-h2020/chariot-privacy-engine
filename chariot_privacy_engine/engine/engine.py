@@ -50,7 +50,7 @@ class Engine(Traceable):
         self.iotl_url = iotl_url
 
     def subscribe_to_southbound(self):
-        self.southbound.subscribe('privacy/#', qos=0)
+        self.southbound.subscribe_to_topics()
 
     def subscribe_to_northbound(self):
         pass

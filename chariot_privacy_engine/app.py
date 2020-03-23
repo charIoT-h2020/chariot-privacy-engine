@@ -22,6 +22,8 @@ class SouthboundConnector(LocalConnector):
         super(SouthboundConnector, self).__init__()
         self.engine = None
 
+        self.topics = [options['listen']]
+
         if 'health' in options:
             logging.info('Enabling health checks endpoints')
             self.health = HealthCheck(options['name']).inject_connector(self)
@@ -54,6 +56,22 @@ class SouthboundConnector(LocalConnector):
 
     def set_up_engine(self, engine):
         self.engine = engine
+
+    def on_connect(self, client, flags, rc, properties=None):
+        self.connected = True
+        self.connack = (flags, rc, properties)
+        if rc == 0:
+            self.subscribe_to_topics()
+
+    def set_topics(self, topics):
+        self.topics = topics
+
+    def subscribe_to_topics(self):
+        subscriptions = []
+        for topic in self.topics:
+            subscriptions.append(gmqtt.Subscription(topic, qos=0))
+        self.client.subscribe(subscriptions, subscription_identifier=3)
+        logging.info('Waiting message from Southbound Dispatcher')
 
 
 class NorthboundConnector(LocalConnector):

@@ -15,33 +15,31 @@
         }
     },
     "local_storage": {
-        "host": "localhost",
-        "port": 8086,
+        "host": "chariot.home.gtheofilis.com",
+        "path": "storage",
+        "port": 80,
         "username": "root",
         "password": "root"
     },
     "brokers": {
         "southbound": {
-            "host": "linux.machine",
+            "host": "192.168.88.212",
             "port": 1883,
             "username": ""
         },
         "northbound": {
-            "host": "linux.machine",
-            "port": 1884,
+            "host": "192.168.88.212",
+            "port": 1883,
             "username": ""
         }
     },
     "tracer" : {
-        "host": "localhost",
+        "host": "192.168.88.212",
         "enabled": true,
         "port": 5775
     },
     "privacy_engine": {
         "name": "privacy-engine",
-        "gateways_ids": {
-            "iot-2/evt/nms_status/fmt/json": "5410ec4d1601"
-        },
         "health": {
             "endpoint": "privacy/_health"
         },
@@ -55,11 +53,11 @@
         "iotl_sync_delay": 300,
         "database": "fog_logs",
         "table": "message",
-        "listen": "dispatcher/#"
+        "listen": "privacy/#"
     },
 	"topology": {
         "filepath": "tests/office.iotl",
-        "iotl_url": "http://linux.machine:8080/iotl/model"
+        "iotl_url": "http://chariot.home.gtheofilis.com/topology/iotl/model?zone=designstudio"
     },
     "logging": {
         "version": 1,
@@ -71,7 +69,7 @@
         },
         "loggers": {
             "gmqtt": {
-                "level": "INFO",
+                "level": "ERROR",
                 "handlers": [
                     "console"
                 ]

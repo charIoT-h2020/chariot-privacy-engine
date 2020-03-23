@@ -25,7 +25,7 @@ requirements = [
     'pycrypto',
     'jaeger-client',
     'pytest-asyncio',
-    'chariot_base==0.10.0' 
+    'chariot_base' 
 ]
 
 setup_requirements = [ ]
