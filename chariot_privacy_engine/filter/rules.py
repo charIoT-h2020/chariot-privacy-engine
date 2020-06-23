@@ -15,7 +15,16 @@ class RsaRuleFilter(object):
         self.human_name = 'encryption_rule_filter'
         self.engine = engine
 
-    def do(self, message, span):
+    def do(self, messages, span):
+        if isinstance(messages, list):
+            filtered_messages = []
+            for message in messages:
+                filtered_messages += self.apply_filter(message, span)
+            return filtered_messages
+        else:
+            return self.apply_filter(message, span)
+
+    def apply_filter(self, message, span):
         rules = self.engine.get_acl(span, message)
         logging.debug('Defined rules: %s for sensor: %s' %
                       (rules, message.sensor_id))
@@ -24,7 +33,9 @@ class RsaRuleFilter(object):
             alert = Alert(self.human_name, msg, 100)
             alert.sensor_id = message.sensor_id
             self.engine.raise_alert(alert, span)
+            return []
         else:
+            messages = []
             for destination in rules['ALLOW']:
                 params = self.engine.get_params(span, destination)
                 key_type = params.get('pubkey_type', None)
@@ -43,7 +54,8 @@ class RsaRuleFilter(object):
                     continue
 
                 message.destination = destination
-                self.engine.publish(message, span)
+                messages.append(message)
+            return messages
 
     def no_encyption(self, message):
         return message

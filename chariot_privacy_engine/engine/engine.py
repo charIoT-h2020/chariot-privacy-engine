@@ -3,7 +3,7 @@ import logging
 import json
 import requests
 
-from ..filter import RsaRuleFilter
+from ..filter import RsaRuleFilter, AnonymizationFilter
 from ..inspector import CognitiveInspector, TopologyInspector, SchemaInspector
 
 from chariot_base.utilities import Traceable
@@ -30,6 +30,7 @@ class Engine(Traceable):
             SchemaInspector(self)
         ]
         self.filters = [
+            AnonymizationFilter(self),
             RsaRuleFilter(self)
         ]
 
@@ -76,19 +77,23 @@ class Engine(Traceable):
                 logging.debug(f'Rule {_inspector.human_name} is muted')
 
     def filter(self, message, child_span):
+        messages = [message]
         for _filter in self.filters:
             if self.is_not_muted(_filter.human_name):
                 if self.is_not_muted_for_sensor(_filter.human_name, message):
                     span = self.start_span(f'filter_{_filter.human_name}', child_span)
-                    _filter.do(message, span)
+                    messages = _filter.do(messages, span)
                     self.close_span(span)
                 else:
                     logging.debug(f'Rule {_filter.human_name} is muted for sensor "{message.sensor_id}"')
             else:
                 logging.debug(f'Rule {_filter.human_name} is muted')
 
+        for filtered_message in messages:
+            self.publish(filtered_message, span)
+
     def publish(self, message, span):
-        m = self.inject_to_message(span, message.dict())        
+        m = self.inject_to_message(span, message.dict())
         self.southbound.publish('northbound', json.dumps(m))
         logging.debug(f'Publish message from "{message.sensor_id}" to "{message.destination}"')
 
@@ -112,7 +117,7 @@ class Engine(Traceable):
     def sync_iotl(self, span):
         if self.iotl_url is None:
             return
-        
+
         if self.should_sync_iotl():
             logging.debug('Sync topology')
             url = self.iotl_url
