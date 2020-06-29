@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import json
 import base64
 import logging
 
 from Crypto.PublicKey import RSA
-from chariot_base.model import Alert
+from chariot_base.model import Alert, Message
 from chariot_base.utilities import has_write_right, has_read_right
 
 
@@ -40,25 +40,28 @@ class RsaRuleFilter(object):
                 params = self.engine.get_params(span, destination)
                 key_type = params.get('pubkey_type', None)
                 if key_type == 'None':
-                    message = self.no_encyption(message)
+                    new_message = self.no_encyption(message)
                 elif key_type == 'RSA':
-                    message = self.rsa_encyption(span, params, message)
+                    new_message = self.rsa_encyption(span, params, message)
                 elif key_type == 'ECDH':
-                    message = self.ecdh_encyption(span, params, message)
+                    new_message = self.ecdh_encyption(span, params, message)
                     continue
                 else:
-                    msg = 'Public key for \'%s\' consumer is not defined.' % destination
+                    msg = f'Public key for \'{destination}\' consumer is not defined.'
                     alert = Alert(self.human_name, msg, 100)
                     alert.sensor_id = message.sensor_id
                     self.engine.raise_alert(alert, span)
                     continue
 
-                message.destination = destination
-                messages.append(message)
+                new_message.destination = destination
+                messages.append(new_message)
+
             return messages
 
     def no_encyption(self, message):
-        return message
+        new_message = Message(message.sensor_id, message.value)
+        new_message.id = message.id
+        return new_message
 
     def ecdh_encyption(self, span, params, message):
         encrypt_span = self.engine.start_span(f'ecdh_encrypt_{self.human_name}', span)
@@ -75,6 +78,7 @@ class RsaRuleFilter(object):
         encrypted_msg = public_key.encrypt(message.value.encode('utf-8'), 32)[0]
         encoded_msg = base64.b64encode(encrypted_msg).decode('utf-8')
         logging.debug(f'Encrypted message: {encoded_msg}')
-        message.value = encoded_msg
+        new_message = Message(message.sensor_id, encoded_msg)
+        new_message.id = messages.id
         self.engine.close_span(encrypt_span)
-        return message
+        return new_message
