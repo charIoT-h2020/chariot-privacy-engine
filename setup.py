@@ -23,6 +23,7 @@ requirements = [
     'fastecdsa',
     'ecdsa',
     'pycrypto',
+    'pycryptodome',
     'jaeger-client',
     'pytest-asyncio',
     'chariot_base'

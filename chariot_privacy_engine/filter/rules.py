@@ -102,6 +102,6 @@ class RsaRuleFilter(object):
 
         logging.debug(f'Encrypted message: {encoded_msg}')
         new_message = Message(message.sensor_id, encoded_msg)
-        new_message.id = messages.id
+        new_message.id = message.id
         self.engine.close_span(encrypt_span)
         return new_message
