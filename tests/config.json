@@ -7,36 +7,34 @@
     "watson_iot": {
         "enabled": false,
         "client": {
-            "org": "jv8w5u",
-            "type": "gateway",
-            "id": "testing",
-            "auth-method": "token",
-            "auth-token": "Q(lB@aTQ+hm@AVrdw!"
+            "identity": {
+                "orgId": "1ji6qy",
+                "typeId": "southbound-dispatcher",
+                "deviceId": "aia-lab"
+            },
+            "auth": {
+                "token": "Vr?f3xd6Q@1vpQYpyl"
+            }
         }
-    },
-    "local_storage": {
-        "host": "chariot.home.gtheofilis.com",
-        "path": "storage",
-        "port": 80,
-        "username": "root",
-        "password": "root"
     },
     "brokers": {
         "southbound": {
-            "host": "192.168.88.212",
+            "host": "172.16.76.4",
             "port": 1883,
             "username": ""
         },
         "northbound": {
-            "host": "192.168.88.212",
-            "port": 1883,
+            "host": "172.16.76.4",
+            "port": 1884,
             "username": ""
         }
     },
-    "tracer" : {
-        "host": "192.168.88.212",
-        "enabled": true,
-        "port": 5775
+    "local_storage": {
+        "host": "chariot.platform.local",
+        "path": "storage",
+        "port": 80,
+        "username": "root",
+        "password": "root"
     },
     "privacy_engine": {
         "name": "privacy-engine",
@@ -50,18 +48,23 @@
             "schema_inspector": false,
             "cognitive_inspector": false
         },
-        "iotl_sync_delay": 300,
+        "iotl_sync_delay": 3600,
         "database": "fog_logs",
         "table": "message",
         "listen": "privacy/#"
     },
-	"topology": {
+    "topology": {
         "filepath": "tests/office.iotl",
-        "iotl_url": "http://chariot.home.gtheofilis.com/topology/iotl/model?zone=designstudio"
+        "iotl_url": "http://chariot.platform.local/topology/iotl/model?zone=designstudio"
+    },
+    "tracer": {
+        "host": "172.16.76.4",
+        "enabled": true,
+        "port": 5775
     },
     "logging": {
         "version": 1,
-        "handlers": {            
+        "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "formatter": "console"

@@ -28,8 +28,14 @@ class SouthboundConnector(LocalConnector):
             logging.info('Enabling health checks endpoints')
             self.health = HealthCheck(options['name']).inject_connector(self)
             self.healthTopic = options['health']['endpoint']
+            self.commandTopic = 'privacy/_commands'
 
-    def on_message(self, client, topic, payload, qos, properties):
+    def on_message(self, client, topic, payload, qos, properties):    
+        if topic == self.commandTopic:
+            logging.debug('receive command')
+            self.engine.execute(payload)
+            return
+
         if topic == self.healthTopic:
             self.health.do(payload)
             return

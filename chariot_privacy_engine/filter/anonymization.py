@@ -42,6 +42,8 @@ class AnonymizationFilter(object):
                   payload[field] = self.apply_sha512(str(payload[field]), span)
               elif algo == 'MD5':
                   payload[field] = self.apply_md5(str(payload[field]), span)
+              elif algo == 'Hide':
+                  payload[field] = self.apply_hide(str(payload[field]), span)
               else:
                   logging.debug(f'Unkwonw algorithm "{algo}"')
           message.value = json.dumps(payload)
@@ -49,6 +51,9 @@ class AnonymizationFilter(object):
         except:
           logging.debug(f'Message payload isn\'t JSON ({message.value})')
           return [message]
+
+    def apply_hide(self, field, span):
+        return '*******'
 
     def apply_sha512(self, field, span):
         m = hashlib.sha512()

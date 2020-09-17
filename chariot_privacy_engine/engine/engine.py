@@ -114,21 +114,40 @@ class Engine(Traceable):
     def is_match(self, span, schema, message):
         return self.iotl.is_match(schema, message.value)
 
+    def execute(self, payload):
+        span = self.start_span(f'execute_command')
+        msg = payload.decode('utf-8')
+        command = json.loads(msg)
+        
+        name = command['name']
+        logging.debug(f'executing command {name}')
+        if name == 'refresh_iotl':
+          self.execute_sync_iotl(span)
+        else:
+          logging.debug('Unkwown command');
+        self.close_span(span)
+        
+    def execute_sync_iotl(self, span):
+        if self.iotl_url is None:
+            return
+
+        logging.debug('Sync topology')
+        url = self.iotl_url
+        headers = self.inject_to_request_header(span, url)
+        self.set_tag(span, 'url', url)
+        result = self.session.get(url, headers=headers)
+        current_iotl = result.json()
+        self.iotl.load(current_iotl['code'])
+        self.schema = self.iotl.schema(True)
+
+        self.last_sync_datetime = datetime.now()
+
     def sync_iotl(self, span):
         if self.iotl_url is None:
             return
 
         if self.should_sync_iotl():
-            logging.debug('Sync topology')
-            url = self.iotl_url
-            headers = self.inject_to_request_header(span, url)
-            self.set_tag(span, 'url', url)
-            result = self.session.get(url, headers=headers)
-            current_iotl = result.json()
-            self.iotl.load(current_iotl['code'])
-            self.schema = self.iotl.schema(True)
-
-            self.last_sync_datetime = datetime.now()
+          self.execute_sync_iotl(span)
 
     def should_sync_iotl(self):
         if self.last_sync_datetime is None:
