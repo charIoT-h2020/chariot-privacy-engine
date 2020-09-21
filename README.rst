@@ -35,10 +35,5 @@ Following commands use to make a new release.
     docker push registry.gitlab.com/chariot-h2020/chariot-privacy-engine
 
 
-Credits
--------
-
-This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage) project template.
-
 .. |epl| image:: https://img.shields.io/badge/License-EPL-green.svg
 .. _epl: https://opensource.org/licenses/EPL-1.0
