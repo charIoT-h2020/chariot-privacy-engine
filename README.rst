@@ -34,6 +34,19 @@ Following commands use to make a new release.
     docker build -t registry.gitlab.com/chariot-h2020/chariot-privacy-engine .
     docker push registry.gitlab.com/chariot-h2020/chariot-privacy-engine
 
+Credits
+-------
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
 .. |epl| image:: https://img.shields.io/badge/License-EPL-green.svg
 .. _epl: https://opensource.org/licenses/EPL-1.0
+
+.. |pypi| image:: https://img.shields.io/pypi/v/chariot-base.svg
+.. _pypi: https://pypi.python.org/pypi/chariot-base
+
+.. |doc| image:: https://readthedocs.org/projects/chariot-base/badge/?version=latest
+.. _doc: https://chariot-base.readthedocs.io/en/latest/?badge=latest
