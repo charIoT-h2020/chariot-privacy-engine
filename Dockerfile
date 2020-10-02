@@ -7,7 +7,7 @@ RUN pip install -U pip && pip install -r requirements_dev.txt && pip install pyt
 RUN python setup.py install
 
 RUN pip uninstall pycrypto -y
-RUN pip install pycryptodome -y --force-reinstall
+RUN pip install pycryptodome --force-reinstall
 
 FROM python:3.7-alpine AS final
 WORKDIR /workspace
