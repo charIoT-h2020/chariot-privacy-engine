@@ -4,6 +4,7 @@ services:
     southbound:
         image: eclipse-mosquitto:1.6.9
         hostname: southbound.mosquitto
+        container_name: southbound.mosquitto
         ports: 
             - "1883:1883"
         volumes:
@@ -28,6 +29,7 @@ services:
     mongodb:
         image: mvertes/alpine-mongo:4.0.6-1
         hostname: mongodb.service
+        container_name: mongodb.service
         volumes:
             - "./mongodb-data:/data/db"
         ports: 
