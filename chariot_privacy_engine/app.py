@@ -48,6 +48,7 @@ class SouthboundConnector(LocalConnector):
             sensor_id = deserialized_model['sensor_id']
             value = json.dumps(deserialized_model['value'])
             message = Message(sensor_id, value)
+            message.timestamp = deserialized_model['timestamp']
             message.id = deserialized_model['package_id']
 
             logging.debug('Received packet "%s" from "%s"' %

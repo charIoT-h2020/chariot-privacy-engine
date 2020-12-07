@@ -9,6 +9,8 @@ from ..inspector import CognitiveInspector, TopologyInspector, SchemaInspector
 from chariot_base.utilities import Traceable
 from chariot_base.utilities.iotlwrap import IoTLWrapper
 
+from influxdb import InfluxDBClient
+
 from datetime import datetime, timedelta
 
 class Engine(Traceable):
@@ -17,6 +19,7 @@ class Engine(Traceable):
         self.southbound = None
         self.northbound = None
         self.schema = []
+        self.db = self.init_db(**options['cognitive']['database'])
 
         self.iotl = None
         self.session = requests.Session()
@@ -169,3 +172,36 @@ class Engine(Traceable):
         for _filters in self.filters:
             if _filters.human_name not in self.muted_options:
                 self.muted_options[_filters.human_name] = False
+
+    def init_db(self, host, port, username, password, database, path, duration='4w'):
+        logging.debug(f'{host}/{path}:{port} <{username}> ({database})')
+        db = InfluxDBClient(host=host, port=port, username=username, password=password, database=database, path=path)
+        db.create_database(database)
+        db.create_retention_policy('awesome_policy', duration, 3, default=True)
+        return db
+
+    def save_instance(self, span, message):
+        is_sensitive = self.is_sensitive(span, message)
+        sensor_id = message.sensor_id
+        timestamp = message.timestamp
+        values = json.loads(message.value)
+
+        points = []
+
+        for k in values.keys():
+            v = values[k]
+            points.append({
+                'measurement': 'instances',
+                'tags': {
+                    'sensor_id': sensor_id
+                },
+                'time': timestamp,
+                'fields': {
+                    'sensor_id': sensor_id,
+                    'value_name': k,
+                    'value': str(v),
+                    'is_sensitive': is_sensitive
+                }
+            })
+
+        return self.db.write_points(points, protocol='json', retention_policy='awesome_policy')

@@ -51,7 +51,17 @@
         "iotl_sync_delay": 3600,
         "database": "fog_logs",
         "table": "message",
-        "listen": "privacy/#"
+        "listen": "privacy/#",
+        "cognitive": {
+            "database": {
+                "host": "localhost",
+                "database": "privacy_points",
+                "path": "",
+                "port": 8086,
+                "username": "root",
+                "password": "root"
+            }
+        }
     },
     "topology": {
         "filepath": "tests/office.iotl",
