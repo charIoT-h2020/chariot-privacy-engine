@@ -1,0 +1,131 @@
+{
+    "brokers": {
+        "southbound": {
+            "host": "localhost",
+            "port": 1883,
+            "username": ""
+        },
+        "northbound": {
+            "host": "localhost",
+            "port": 1884,
+            "username": ""
+        }
+    },
+    "simulation": {
+        "interval": 10,
+        "gateways": [
+            {
+                "mac": "gateway_52806c75c3f2",
+                "digital": 16,
+                "analog": 8
+            }
+        ],
+        "sensors": [
+            {
+                "mac": "device_52806c75c3fa_Sensor1",
+                "sensorName": "Sensor1",
+                "values": [
+                    {
+                        "type": "numeric",
+                        "name": "temp",
+                        "min": 10,
+                        "max": 20
+                    },
+                    {
+                        "type": "numeric",
+                        "name": "hum",
+                        "min": 10,
+                        "max": 20
+                    }
+                ]
+            },
+            {
+                "mac": "device_52806c75c3fb_Sensor2",  
+                "sensorName": "Sensor2",
+                "authenticated": false
+            },
+            {
+                "mac": "device_52806c75c3f2_Sensor3",                
+                "type": "ble",
+                "sensorName": "Sensor3",
+                "authenticated": false
+            },
+            {
+                "mac": "device_52806c75c3f1_Sensor4",
+                "type": "ble",
+                "sensorName": "Sensor4",
+                "values": [
+                    {
+                        "type": "numeric",
+                        "name": "temp",
+                        "min": 10,
+                        "max": 20
+                    },
+                    {
+                        "type": "numeric",
+                        "name": "hum",
+                        "min": 10,
+                        "max": 20
+                    }
+                ]
+            },
+            {
+                "mac": "device_52806c75c3f2_Sensor5",
+                "values": [
+                    {
+                        "type": "numeric",
+                        "name": "temp",
+                        "min": 35,
+                        "max": 36
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "presence"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "face"
+                    },
+                    {
+                        "type": "identity",
+                        "name": "id"
+                    }
+                ]
+            }
+        ]
+    },
+    "logging": {
+        "version": 1,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "console"
+            }
+        },
+        "loggers": {
+            "gmqtt": {
+                "level": "INFO",
+                "handlers": [
+                    "console"
+                ]
+            }
+        },
+        "root": {
+            "level": "DEBUG",
+            "handlers": [
+                "console"
+            ]
+        },
+        "formatters": {
+            "file": {
+                "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+            },
+            "console": {
+                "format": "%(levelname)s: %(message)s"
+            },
+            "debug": {
+                "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+            }
+        }
+    }
+}

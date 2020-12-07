@@ -19,13 +19,13 @@
     },
     "brokers": {
         "southbound": {
-            "host": "172.16.76.4",
+            "host": "localhost",
             "port": 1883,
             "username": ""
         },
         "northbound": {
-            "host": "172.16.76.4",
-            "port": 1884,
+            "host": "localhost",
+            "port": 1883,
             "username": ""
         }
     },
@@ -55,11 +55,11 @@
     },
     "topology": {
         "filepath": "tests/office.iotl",
-        "iotl_url": "http://chariot.platform.local/topology/iotl/model?zone=designstudio"
+        "iotl_url": "http://localhost:5000/api/v1.0/iotl/model?zone=designstudio"
     },
     "tracer": {
         "host": "172.16.76.4",
-        "enabled": true,
+        "enabled": false,
         "port": 5775
     },
     "logging": {

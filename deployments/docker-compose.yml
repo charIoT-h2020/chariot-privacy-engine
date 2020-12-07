@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+    southbound:
+        image: eclipse-mosquitto:1.6.9
+        hostname: southbound.mosquitto
+        ports: 
+            - "1883:1883"
+        volumes:
+            - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+        networks:
+            default:
+                aliases:
+                - southbound.mosquitto
+
+    mongodb:
+        image: mvertes/alpine-mongo:4.0.6-1
+        hostname: mongodb.service
+        volumes:
+            - "./mongodb-data:/data/db"
+        ports: 
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
