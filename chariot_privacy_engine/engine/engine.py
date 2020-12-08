@@ -193,7 +193,8 @@ class Engine(Traceable):
             points.append({
                 'measurement': 'instances',
                 'tags': {
-                    'sensor_id': sensor_id
+                    'sensor_id': sensor_id,
+                    'value_name': k,
                 },
                 'time': timestamp,
                 'fields': {
