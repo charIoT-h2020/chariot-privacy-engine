@@ -22,19 +22,17 @@ class TrainService:
         db = DataFrameClient(host=host, port=port, username=username, password=password, database=database, path=path)
         return db
 
-    def query_raw_data(self):
-        results  = self.db.query(f'SELECT "is_sensitive", "sensor_id", "value", "value_name" FROM "awesome_policy"."instances"', 
+    def query_data(self):
+        results  = self.db.query(f'SELECT "sensor_id", "value_name", "value", "is_sensitive" FROM "awesome_policy"."instances"', 
                                  database=self.options['cognitive']['database']['database'])
         points = results 
         logging.debug(points)
-        # for point in points:
-        #     logging.debug(f'{point["time"]}, {point["sensor_id"]}, {point["value"]}, {point["value_name"]}, {point["is_sensitive"]}')
 
 def main(args=None):
     opts = open_config_file()
     options_engine = opts.privacy_engine
     service = TrainService(options_engine)
-    service.query_raw_data()
+    service.query_data()
 
 if __name__ == '__main__':
     main()
