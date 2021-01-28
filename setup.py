@@ -26,7 +26,10 @@ requirements = [
     'pycryptodome',
     'jaeger-client',
     'pytest-asyncio',
-    'chariot_base'
+    'chariot_base',
+    'tensorflow',
+    'keras',
+    'scikit-learn'
 ]
 
 setup_requirements = [ ]
