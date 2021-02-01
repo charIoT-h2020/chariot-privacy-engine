@@ -24,6 +24,7 @@ numpy.random.seed(seed)
 
 # load dataset
 dataframe = pandas.read_csv("sonar.csv", header=None)
+print(dataframe)
 dataset = dataframe.values
 # split into input (X) and output (Y) variables
 X = dataset[:,0:60].astype(float)
